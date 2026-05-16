@@ -1,0 +1,44 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\contentsline {xchapter}{Introduction}{4}{chapter.1}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{QAS Decisions}{5}{chapter.2}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Other decisions}{6}{chapter.3}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Discussion}{7}{chapter.4}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Client-Server View}{8}{appendix.A}%
+\contentsline {figure}{\numberline {A.1}{\ignorespaces Context diagram for the client-server view}}{8}{figure.caption.18}%
+\contentsline {figure}{\numberline {A.2}{\ignorespaces Primary diagram of the client-server view}}{8}{figure.caption.19}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Decomposition View}{9}{appendix.B}%
+\contentsline {figure}{\numberline {B.1}{\ignorespaces Context diagram for the decomposition view}}{9}{figure.caption.20}%
+\contentsline {figure}{\numberline {B.2}{\ignorespaces Decomposition Third Party Apps}}{10}{figure.caption.21}%
+\contentsline {figure}{\numberline {B.3}{\ignorespaces Decomposition of the MLModelManager}}{11}{figure.caption.22}%
+\contentsline {figure}{\numberline {B.4}{\ignorespaces Decomposition of the RiskEstimationProcessor}}{11}{figure.caption.23}%
+\contentsline {figure}{\numberline {B.5}{\ignorespaces Patient Gateway App Component Diagram}}{12}{figure.caption.24}%
+\contentsline {figure}{\numberline {B.6}{\ignorespaces Primary diagram of the client-server view}}{12}{figure.caption.25}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Deployment view}{13}{appendix.C}%
+\contentsline {figure}{\numberline {C.1}{\ignorespaces Context diagram for the deployment view}}{13}{figure.caption.26}%
+\contentsline {figure}{\numberline {C.2}{\ignorespaces Primary deployment diagram}}{14}{figure.caption.27}%
+\contentsline {figure}{\numberline {C.3}{\ignorespaces Pilot Deployment (200 patients, 5 clin models)}}{15}{figure.caption.28}%
+\contentsline {figure}{\numberline {C.4}{\ignorespaces Development Test Deployment (20 patients, 3 clin models)}}{16}{figure.caption.29}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Process View}{17}{appendix.D}%
+\contentsline {figure}{\numberline {D.1}{\ignorespaces Risk estimation process}}{18}{figure.caption.30}%
+\contentsline {figure}{\numberline {D.2}{\ignorespaces Compute clinical model result}}{19}{figure.caption.31}%
+\contentsline {figure}{\numberline {D.3}{\ignorespaces MLModel Synchronization}}{19}{figure.caption.32}%
+\contentsline {figure}{\numberline {D.4}{\ignorespaces Processing MLModel updates}}{20}{figure.caption.33}%
+\contentsline {figure}{\numberline {D.5}{\ignorespaces Incoming sensor data}}{20}{figure.caption.34}%
+\contentsline {figure}{\numberline {D.6}{\ignorespaces Combining ClinicalModelJob results}}{21}{figure.caption.35}%
+\contentsline {figure}{\numberline {D.7}{\ignorespaces Third party polling}}{22}{figure.caption.36}%
+\contentsline {figure}{\numberline {D.8}{\ignorespaces Store tokens}}{23}{figure.caption.37}%
+\contentsline {figure}{\numberline {D.9}{\ignorespaces av2: Communication channel between PMS and PG goes down: Detection during Communication (App-Side)}}{23}{figure.caption.38}%
+\contentsline {figure}{\numberline {D.10}{\ignorespaces av2: Patient gateway fails}}{24}{figure.caption.39}%
+\contentsline {figure}{\numberline {D.11}{\ignorespaces Update gateway push wait time}}{25}{figure.caption.40}%
+\contentsline {figure}{\numberline {D.12}{\ignorespaces Sensor Data Polling}}{26}{figure.caption.41}%
+\contentsline {figure}{\numberline {D.13}{\ignorespaces av2: Communication channel between PMS and PG goes down: Detection by time-out (Back-end)}}{27}{figure.caption.42}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Element catalog}{28}{appendix.E}%
