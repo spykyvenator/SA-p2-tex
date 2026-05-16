@@ -78,50 +78,29 @@ An alternative could be having a single component to contact all third party api
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 3:
-Patient Gateway Endpoint}
+Patient Gateway Endpoint and the Operator Gateway Endpoint}
 
-This is the entry and exit point for communication between the pms and the patients gateway (their smartphone).
+This is the entry and exit point for communication between the pms and the patients gateway (their smartphone) or the service operators like doctors, nurses maintenance engineers and such.
 
 \subsubsection*{Employed tactics and patterns}
-Single responsiblity
+Single responsiblity,
+Role based access control.
 
 \subsubsection*{Sensitivity points}
-Because the gateway handles all incoming patient requests it should be securely implemented as connection to a component the gateway should'nt be able to access could be used as a possible entrypoint for potential hackers.
+For these components it is important to make sure they only connect to the components they need. Connecting them to unnecessary components could lead to a user accessing the wrong information.
 
 \subsubsection*{Relation to other architectural decisions}
-
+Making every user type a component is architecturally easy as for every component we have to think what user type needs access to it and connect it with the corresponding endpoint.
 
 \subsubsection*{Trade-off justification}
 
 
 \subsubsection*{Considered alternatives}
-\paragraph{every component just directly contacts the patient's gateway.}
-If the patient gateway endpoint was not there we could have every component that needs access to the patient gateway contact it directly. This seemed like a bad design to us as connectivity issues are better found if all communication hapens in one component. Our solution allows for less code duplication as there are many common communication functions such as retries and calls to make on failure that can be implemented in the same way for almost all communication calls.
+\paragraph{every component just directly contacts the needed user.}
+We could have every component that needs access to a user contact him/her directly. This seemed like a bad design to us as connectivity issues are better found if all communication hapens in one component. Our solution allows for less code duplication as there are many common communication functions such as retries and calls to make on failure that can be implemented in the same way for almost all communication calls.
 
-\paragraph{We offer multiple components, each for a certain task to be communicated to the gateway.}
+\paragraph{We offer multiple components, each for a certain task to be communicated to a user.}
 This seemed like a more viable option compared to the previous alternative but we did not take it as we again have the problem of having to look in multiple places when the communication fails. It also gives a harder time to see what components the gateway can connect to which is something that could be useful for the security team.
-
-% ------------------------------------------------------------
-\subsection*{Architectural Decision 4:
-Patient DataStorage}
-
-This is our local database for storing the patient data that can't be stored in the hospital information system.
-
-\subsubsection*{Employed tactics and patterns}
-Single responsiblity
-
-\subsubsection*{Sensitivity points}
-This database stores the incoming data from the third parties that can be contacted for extra patient data. This could include sensitive data so it should be securely implemented and only accessible from the components that need it.
-
-\subsubsection*{Relation to other architectural decisions}
-This fits in with the Third party api's as these can directly contact the services and store the data here.
-
-\subsubsection*{Trade-off justification}
-The database introduces complexity, however it reduces the time to gather all data necessary for predictions.
-
-\subsubsection*{Considered alternatives}
-\paragraph{Storing in the hospital information system (his).}
-This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 4:
