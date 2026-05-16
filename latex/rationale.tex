@@ -29,9 +29,9 @@ For Software Architecture Part 2 we were asked to add availability and third par
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:
-name of the decision}
+Adding the cronjob component}
 
-Description and motivation of the decision.
+The cronjob component was introduced to satisfy the need of the pms to measure time between requests and periodically run certain tasks.
 
 \subsubsection*{Employed tactics and patterns}
 name of tactic1,
@@ -51,31 +51,30 @@ Justification of the trade-offs.
 \paragraph{Name of alternative 1.}
 Describe alternative and why it was not chosen.
 
+\paragraph{Name of alternative 2.}
+Another possibility would be 
+
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 2:
-name of the decision}
+ThirdPartyApi's}
 
-Description and motivation of the decision.
+Adding the ThirdPartyApi's component and the googlefit and strava children are present to allow easy implementation of new third party components and a common interface to all.
 
 \subsubsection*{Employed tactics and patterns}
-name of tactic1,
-name of tactic2
+Polymorphism,
 
 \subsubsection*{Sensitivity points}
-Description of the sensitivity points.
+Here we need to make sure the patient third party token is not leaked they should be securely stored in our database. Implementation of a new third party service should be as fast as possible, a slim parent class would assure this.
 
 \subsubsection*{Relation to other architectural decisions}
-How this decision relates to other architectural decisions.
+A common interface with the third party api's impacted our decissions to use the local database as this allows us to connect these components only once making implementation easier.
 
 \subsubsection*{Trade-off justification}
-Justification of the trade-offs.
+This makes the application that bit bigger and more complicated but seems well worth it as we are rewarded with better accuracy at a low cost this could also impact latency of the prediction process.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Name of alternative 1.}
-Describe alternative and why it was not chosen.
-
-\paragraph{Name of alternative 2.}
-Describe alternative and why it was not chosen.
+An alternative could be having a single component to contact all third party apis, however this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement.
 
 
 
