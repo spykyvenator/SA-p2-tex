@@ -1,120 +1,121 @@
 \babel@toc {english}{}\relax 
 \contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
 \contentsline {chapter}{\numberline {2}QAS Decisions}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Qual1: name of the quality}{5}{section.2.1}%
-\contentsline {paragraph}{Name of alternative 1.}{5}{section*.9}%
-\contentsline {paragraph}{Name of alternative 1.}{5}{section*.16}%
-\contentsline {paragraph}{Name of alternative 2.}{5}{section*.17}%
-\contentsline {chapter}{\numberline {3}Other decisions}{6}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Discussion}{7}{chapter.4}%
-\contentsline {chapter}{\numberline {A}Client-Server View}{8}{appendix.A}%
-\contentsline {chapter}{\numberline {B}Decomposition View}{9}{appendix.B}%
-\contentsline {chapter}{\numberline {C}Deployment view}{13}{appendix.C}%
-\contentsline {chapter}{\numberline {D}Process View}{17}{appendix.D}%
-\contentsline {chapter}{\numberline {E}Element catalog}{28}{appendix.E}%
-\contentsline {section}{\numberline {E.1}Components}{28}{section.E.1}%
-\contentsline {subsection}{\numberline {E.1.1}AlertManager}{28}{subsection.E.1.1}%
-\contentsline {subsection}{\numberline {E.1.2}ClinicalJobCreator}{28}{subsection.E.1.2}%
-\contentsline {subsection}{\numberline {E.1.3}ClinicalModelCache}{28}{subsection.E.1.3}%
-\contentsline {subsection}{\numberline {E.1.4}ClinicalModelDB}{28}{subsection.E.1.4}%
-\contentsline {subsection}{\numberline {E.1.5}Cronjob}{29}{subsection.E.1.5}%
-\contentsline {subsection}{\numberline {E.1.6}eHealth Platform}{29}{subsection.E.1.6}%
-\contentsline {subsection}{\numberline {E.1.7}HeartbeatMonitor}{29}{subsection.E.1.7}%
-\contentsline {subsection}{\numberline {E.1.8}HIS}{29}{subsection.E.1.8}%
-\contentsline {subsection}{\numberline {E.1.9}HIS Manager}{29}{subsection.E.1.9}%
-\contentsline {subsection}{\numberline {E.1.10}KVStorageService}{30}{subsection.E.1.10}%
-\contentsline {subsection}{\numberline {E.1.11}MLaaS}{30}{subsection.E.1.11}%
-\contentsline {subsection}{\numberline {E.1.12}MLModelManager}{30}{subsection.E.1.12}%
-\contentsline {subsection}{\numberline {E.1.13}Mobile OS}{30}{subsection.E.1.13}%
-\contentsline {subsection}{\numberline {E.1.14}Operator Gateway Endpoint}{30}{subsection.E.1.14}%
-\contentsline {subsection}{\numberline {E.1.15}Patient Gateway App}{31}{subsection.E.1.15}%
-\contentsline {subsection}{\numberline {E.1.16}Patient Gateway Endpoint}{31}{subsection.E.1.16}%
-\contentsline {subsection}{\numberline {E.1.17}PatientDataStorage}{31}{subsection.E.1.17}%
-\contentsline {subsection}{\numberline {E.1.18}RiskEstimationCombiner}{31}{subsection.E.1.18}%
-\contentsline {subsection}{\numberline {E.1.19}RiskEstimationProcessor}{31}{subsection.E.1.19}%
-\contentsline {subsection}{\numberline {E.1.20}RiskEstimationScheduler}{32}{subsection.E.1.20}%
-\contentsline {subsection}{\numberline {E.1.21}SMS gateway}{32}{subsection.E.1.21}%
-\contentsline {subsection}{\numberline {E.1.22}ThirdPartyService}{32}{subsection.E.1.22}%
-\contentsline {section}{\numberline {E.2}Modules}{32}{section.E.2}%
-\contentsline {subsection}{\numberline {E.2.1}App Endpoint}{32}{subsection.E.2.1}%
-\contentsline {subsection}{\numberline {E.2.2}Buffer}{32}{subsection.E.2.2}%
-\contentsline {subsection}{\numberline {E.2.3}DataRiskAssessment}{33}{subsection.E.2.3}%
-\contentsline {subsection}{\numberline {E.2.4}Google Fit API}{33}{subsection.E.2.4}%
-\contentsline {subsection}{\numberline {E.2.5}JobMLModelSelector}{33}{subsection.E.2.5}%
-\contentsline {subsection}{\numberline {E.2.6}JobProcessor}{33}{subsection.E.2.6}%
-\contentsline {subsection}{\numberline {E.2.7}MLaaSLibrary}{33}{subsection.E.2.7}%
-\contentsline {subsection}{\numberline {E.2.8}MLLibrary}{34}{subsection.E.2.8}%
-\contentsline {subsection}{\numberline {E.2.9}MLModelRepository}{34}{subsection.E.2.9}%
-\contentsline {subsection}{\numberline {E.2.10}MLModelRetrieval}{34}{subsection.E.2.10}%
-\contentsline {subsection}{\numberline {E.2.11}MLModelStorageManager}{34}{subsection.E.2.11}%
-\contentsline {subsection}{\numberline {E.2.12}MLModelUpdateProcessor}{34}{subsection.E.2.12}%
-\contentsline {subsection}{\numberline {E.2.13}ModelUpdater}{35}{subsection.E.2.13}%
-\contentsline {subsection}{\numberline {E.2.14}Strava API}{35}{subsection.E.2.14}%
-\contentsline {subsection}{\numberline {E.2.15}SyncManager}{35}{subsection.E.2.15}%
-\contentsline {subsection}{\numberline {E.2.16}ThirdParty API's}{35}{subsection.E.2.16}%
-\contentsline {subsection}{\numberline {E.2.17}ThirdPartySyncService}{35}{subsection.E.2.17}%
-\contentsline {subsection}{\numberline {E.2.18}TokenStorage}{36}{subsection.E.2.18}%
-\contentsline {section}{\numberline {E.3}Interfaces}{36}{section.E.3}%
-\contentsline {subsection}{\numberline {E.3.1}AlertMgmt}{36}{subsection.E.3.1}%
-\contentsline {subsection}{\numberline {E.3.2}AlertPush}{36}{subsection.E.3.2}%
-\contentsline {subsection}{\numberline {E.3.3}ApplyClinicalModel}{36}{subsection.E.3.3}%
-\contentsline {subsection}{\numberline {E.3.4}BufferMgmt}{36}{subsection.E.3.4}%
-\contentsline {subsection}{\numberline {E.3.5}ClinicalJobMgmt}{36}{subsection.E.3.5}%
-\contentsline {subsection}{\numberline {E.3.6}ClinicalModelCacheMgmt}{37}{subsection.E.3.6}%
-\contentsline {subsection}{\numberline {E.3.7}ClinicalModelStorage}{37}{subsection.E.3.7}%
-\contentsline {subsection}{\numberline {E.3.8}CommuniationProblems}{37}{subsection.E.3.8}%
-\contentsline {subsection}{\numberline {E.3.9}DataAnalysis}{37}{subsection.E.3.9}%
-\contentsline {subsection}{\numberline {E.3.10}FetchClinicalModels}{37}{subsection.E.3.10}%
-\contentsline {subsection}{\numberline {E.3.11}FetchJobs}{38}{subsection.E.3.11}%
-\contentsline {subsection}{\numberline {E.3.12}FetchMLModel}{38}{subsection.E.3.12}%
-\contentsline {subsection}{\numberline {E.3.13}GatewayRequests}{38}{subsection.E.3.13}%
-\contentsline {subsection}{\numberline {E.3.14}healthAPI}{38}{subsection.E.3.14}%
-\contentsline {subsection}{\numberline {E.3.15}HeartbeatMgmt}{40}{subsection.E.3.15}%
-\contentsline {subsection}{\numberline {E.3.16}JobMgmt}{40}{subsection.E.3.16}%
-\contentsline {subsection}{\numberline {E.3.17}KVStore}{40}{subsection.E.3.17}%
-\contentsline {subsection}{\numberline {E.3.18}LaunchRiskEstimation}{40}{subsection.E.3.18}%
-\contentsline {subsection}{\numberline {E.3.19}MLaaSAPI}{41}{subsection.E.3.19}%
-\contentsline {subsection}{\numberline {E.3.20}MLaaSService}{41}{subsection.E.3.20}%
-\contentsline {subsection}{\numberline {E.3.21}MLAPI}{42}{subsection.E.3.21}%
-\contentsline {subsection}{\numberline {E.3.22}MLModelMgmt}{42}{subsection.E.3.22}%
-\contentsline {subsection}{\numberline {E.3.23}MLModelStorage}{43}{subsection.E.3.23}%
-\contentsline {subsection}{\numberline {E.3.24}MLModelSync}{43}{subsection.E.3.24}%
-\contentsline {subsection}{\numberline {E.3.25}MLModelUpdateMgmt}{43}{subsection.E.3.25}%
-\contentsline {subsection}{\numberline {E.3.26}OS Mgmt}{43}{subsection.E.3.26}%
-\contentsline {subsection}{\numberline {E.3.27}OtherDataMgmt}{43}{subsection.E.3.27}%
-\contentsline {subsection}{\numberline {E.3.28}PatientDataMgmt}{44}{subsection.E.3.28}%
-\contentsline {subsection}{\numberline {E.3.29}PatientDataPush}{44}{subsection.E.3.29}%
-\contentsline {subsection}{\numberline {E.3.30}PatientRecordMgmt}{44}{subsection.E.3.30}%
-\contentsline {subsection}{\numberline {E.3.31}Results}{44}{subsection.E.3.31}%
-\contentsline {subsection}{\numberline {E.3.32}SensorDataMgmt}{45}{subsection.E.3.32}%
-\contentsline {subsection}{\numberline {E.3.33}SMSinterface}{45}{subsection.E.3.33}%
-\contentsline {subsection}{\numberline {E.3.34}SyncMgmt}{45}{subsection.E.3.34}%
-\contentsline {subsection}{\numberline {E.3.35}ThirdPartyAPIConnection}{45}{subsection.E.3.35}%
-\contentsline {subsection}{\numberline {E.3.36}ThirdPartyApiInterface}{46}{subsection.E.3.36}%
-\contentsline {subsection}{\numberline {E.3.37}ThirdPartyDataMgmt}{46}{subsection.E.3.37}%
-\contentsline {subsection}{\numberline {E.3.38}TokenMgmt}{46}{subsection.E.3.38}%
-\contentsline {subsection}{\numberline {E.3.39}UpdateTimer}{46}{subsection.E.3.39}%
-\contentsline {section}{\numberline {E.4}Nodes}{46}{section.E.4}%
-\contentsline {subsection}{\numberline {E.4.1}ControlNode}{46}{subsection.E.4.1}%
-\contentsline {subsection}{\numberline {E.4.2}DBNode (Pilot Deployment)}{47}{subsection.E.4.2}%
-\contentsline {subsection}{\numberline {E.4.3}eHealthPlatform}{47}{subsection.E.4.3}%
-\contentsline {subsection}{\numberline {E.4.4}MLaaS Conn (Pilot Deployment)}{47}{subsection.E.4.4}%
-\contentsline {subsection}{\numberline {E.4.5}MLaaS Service (Dev Deployment)}{47}{subsection.E.4.5}%
-\contentsline {subsection}{\numberline {E.4.6}MLaaS Service (Pilot Deployment)}{47}{subsection.E.4.6}%
-\contentsline {subsection}{\numberline {E.4.7}MLaaSCloud}{47}{subsection.E.4.7}%
-\contentsline {subsection}{\numberline {E.4.8}MLaaSConnectorNode}{47}{subsection.E.4.8}%
-\contentsline {subsection}{\numberline {E.4.9}modelDB (Pilot Deployment)}{47}{subsection.E.4.9}%
-\contentsline {subsection}{\numberline {E.4.10}ModelStorage}{47}{subsection.E.4.10}%
-\contentsline {subsection}{\numberline {E.4.11}Node}{47}{subsection.E.4.11}%
-\contentsline {subsection}{\numberline {E.4.12}Patient Devices}{47}{subsection.E.4.12}%
-\contentsline {subsection}{\numberline {E.4.13}PatientDB}{47}{subsection.E.4.13}%
-\contentsline {subsection}{\numberline {E.4.14}RiskEstimationManagementNode (Pilot Deployment)}{48}{subsection.E.4.14}%
-\contentsline {subsection}{\numberline {E.4.15}RiskEstimationManagmentNode (Dev Deployment)}{48}{subsection.E.4.15}%
-\contentsline {subsection}{\numberline {E.4.16}RiskEstimationMgmtNode}{48}{subsection.E.4.16}%
-\contentsline {subsection}{\numberline {E.4.17}RiskEstimationProcessorNode}{48}{subsection.E.4.17}%
-\contentsline {subsection}{\numberline {E.4.18}RiskEstimationProcessorNode (Dev Deployment)}{48}{subsection.E.4.18}%
-\contentsline {subsection}{\numberline {E.4.19}RiskEstimationProcessorNode (Pilot Deployment)}{48}{subsection.E.4.19}%
-\contentsline {subsection}{\numberline {E.4.20}TODONode}{48}{subsection.E.4.20}%
-\contentsline {section}{\numberline {E.5}Exceptions}{48}{section.E.5}%
-\contentsline {section}{\numberline {E.6}Data types}{49}{section.E.6}%
-\contentsline {section}{\numberline {E.7}Unresolved issues}{54}{section.E.7}%
+\contentsline {section}{\numberline {2.1}Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Qual2: Communication between patient gateways and PMS backend (Av2)}{5}{section.2.2}%
+\contentsline {paragraph}{Name of alternative 1.}{5}{section*.10}%
+\contentsline {paragraph}{Name of alternative 2.}{5}{section*.11}%
+\contentsline {paragraph}{Name of alternative 1.}{6}{section*.18}%
+\contentsline {chapter}{\numberline {3}Other decisions}{7}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Discussion}{8}{chapter.4}%
+\contentsline {chapter}{\numberline {A}Client-Server View}{9}{appendix.A}%
+\contentsline {chapter}{\numberline {B}Decomposition View}{10}{appendix.B}%
+\contentsline {chapter}{\numberline {C}Deployment view}{14}{appendix.C}%
+\contentsline {chapter}{\numberline {D}Process View}{18}{appendix.D}%
+\contentsline {chapter}{\numberline {E}Element catalog}{29}{appendix.E}%
+\contentsline {section}{\numberline {E.1}Components}{29}{section.E.1}%
+\contentsline {subsection}{\numberline {E.1.1}AlertManager}{29}{subsection.E.1.1}%
+\contentsline {subsection}{\numberline {E.1.2}ClinicalJobCreator}{29}{subsection.E.1.2}%
+\contentsline {subsection}{\numberline {E.1.3}ClinicalModelCache}{29}{subsection.E.1.3}%
+\contentsline {subsection}{\numberline {E.1.4}ClinicalModelDB}{29}{subsection.E.1.4}%
+\contentsline {subsection}{\numberline {E.1.5}Cronjob}{30}{subsection.E.1.5}%
+\contentsline {subsection}{\numberline {E.1.6}eHealth Platform}{30}{subsection.E.1.6}%
+\contentsline {subsection}{\numberline {E.1.7}HeartbeatMonitor}{30}{subsection.E.1.7}%
+\contentsline {subsection}{\numberline {E.1.8}HIS}{30}{subsection.E.1.8}%
+\contentsline {subsection}{\numberline {E.1.9}HIS Manager}{30}{subsection.E.1.9}%
+\contentsline {subsection}{\numberline {E.1.10}KVStorageService}{31}{subsection.E.1.10}%
+\contentsline {subsection}{\numberline {E.1.11}MLaaS}{31}{subsection.E.1.11}%
+\contentsline {subsection}{\numberline {E.1.12}MLModelManager}{31}{subsection.E.1.12}%
+\contentsline {subsection}{\numberline {E.1.13}Mobile OS}{31}{subsection.E.1.13}%
+\contentsline {subsection}{\numberline {E.1.14}Operator Gateway Endpoint}{31}{subsection.E.1.14}%
+\contentsline {subsection}{\numberline {E.1.15}Patient Gateway App}{32}{subsection.E.1.15}%
+\contentsline {subsection}{\numberline {E.1.16}Patient Gateway Endpoint}{32}{subsection.E.1.16}%
+\contentsline {subsection}{\numberline {E.1.17}PatientDataStorage}{32}{subsection.E.1.17}%
+\contentsline {subsection}{\numberline {E.1.18}RiskEstimationCombiner}{32}{subsection.E.1.18}%
+\contentsline {subsection}{\numberline {E.1.19}RiskEstimationProcessor}{32}{subsection.E.1.19}%
+\contentsline {subsection}{\numberline {E.1.20}RiskEstimationScheduler}{33}{subsection.E.1.20}%
+\contentsline {subsection}{\numberline {E.1.21}SMS gateway}{33}{subsection.E.1.21}%
+\contentsline {subsection}{\numberline {E.1.22}ThirdPartyService}{33}{subsection.E.1.22}%
+\contentsline {section}{\numberline {E.2}Modules}{33}{section.E.2}%
+\contentsline {subsection}{\numberline {E.2.1}App Endpoint}{33}{subsection.E.2.1}%
+\contentsline {subsection}{\numberline {E.2.2}Buffer}{33}{subsection.E.2.2}%
+\contentsline {subsection}{\numberline {E.2.3}DataRiskAssessment}{34}{subsection.E.2.3}%
+\contentsline {subsection}{\numberline {E.2.4}Google Fit API}{34}{subsection.E.2.4}%
+\contentsline {subsection}{\numberline {E.2.5}JobMLModelSelector}{34}{subsection.E.2.5}%
+\contentsline {subsection}{\numberline {E.2.6}JobProcessor}{34}{subsection.E.2.6}%
+\contentsline {subsection}{\numberline {E.2.7}MLaaSLibrary}{34}{subsection.E.2.7}%
+\contentsline {subsection}{\numberline {E.2.8}MLLibrary}{35}{subsection.E.2.8}%
+\contentsline {subsection}{\numberline {E.2.9}MLModelRepository}{35}{subsection.E.2.9}%
+\contentsline {subsection}{\numberline {E.2.10}MLModelRetrieval}{35}{subsection.E.2.10}%
+\contentsline {subsection}{\numberline {E.2.11}MLModelStorageManager}{35}{subsection.E.2.11}%
+\contentsline {subsection}{\numberline {E.2.12}MLModelUpdateProcessor}{35}{subsection.E.2.12}%
+\contentsline {subsection}{\numberline {E.2.13}ModelUpdater}{36}{subsection.E.2.13}%
+\contentsline {subsection}{\numberline {E.2.14}Strava API}{36}{subsection.E.2.14}%
+\contentsline {subsection}{\numberline {E.2.15}SyncManager}{36}{subsection.E.2.15}%
+\contentsline {subsection}{\numberline {E.2.16}ThirdParty API's}{36}{subsection.E.2.16}%
+\contentsline {subsection}{\numberline {E.2.17}ThirdPartySyncService}{36}{subsection.E.2.17}%
+\contentsline {subsection}{\numberline {E.2.18}TokenStorage}{37}{subsection.E.2.18}%
+\contentsline {section}{\numberline {E.3}Interfaces}{37}{section.E.3}%
+\contentsline {subsection}{\numberline {E.3.1}AlertMgmt}{37}{subsection.E.3.1}%
+\contentsline {subsection}{\numberline {E.3.2}AlertPush}{37}{subsection.E.3.2}%
+\contentsline {subsection}{\numberline {E.3.3}ApplyClinicalModel}{37}{subsection.E.3.3}%
+\contentsline {subsection}{\numberline {E.3.4}BufferMgmt}{37}{subsection.E.3.4}%
+\contentsline {subsection}{\numberline {E.3.5}ClinicalJobMgmt}{37}{subsection.E.3.5}%
+\contentsline {subsection}{\numberline {E.3.6}ClinicalModelCacheMgmt}{38}{subsection.E.3.6}%
+\contentsline {subsection}{\numberline {E.3.7}ClinicalModelStorage}{38}{subsection.E.3.7}%
+\contentsline {subsection}{\numberline {E.3.8}CommuniationProblems}{38}{subsection.E.3.8}%
+\contentsline {subsection}{\numberline {E.3.9}DataAnalysis}{38}{subsection.E.3.9}%
+\contentsline {subsection}{\numberline {E.3.10}FetchClinicalModels}{38}{subsection.E.3.10}%
+\contentsline {subsection}{\numberline {E.3.11}FetchJobs}{39}{subsection.E.3.11}%
+\contentsline {subsection}{\numberline {E.3.12}FetchMLModel}{39}{subsection.E.3.12}%
+\contentsline {subsection}{\numberline {E.3.13}GatewayRequests}{39}{subsection.E.3.13}%
+\contentsline {subsection}{\numberline {E.3.14}healthAPI}{39}{subsection.E.3.14}%
+\contentsline {subsection}{\numberline {E.3.15}HeartbeatMgmt}{41}{subsection.E.3.15}%
+\contentsline {subsection}{\numberline {E.3.16}JobMgmt}{41}{subsection.E.3.16}%
+\contentsline {subsection}{\numberline {E.3.17}KVStore}{41}{subsection.E.3.17}%
+\contentsline {subsection}{\numberline {E.3.18}LaunchRiskEstimation}{41}{subsection.E.3.18}%
+\contentsline {subsection}{\numberline {E.3.19}MLaaSAPI}{42}{subsection.E.3.19}%
+\contentsline {subsection}{\numberline {E.3.20}MLaaSService}{42}{subsection.E.3.20}%
+\contentsline {subsection}{\numberline {E.3.21}MLAPI}{43}{subsection.E.3.21}%
+\contentsline {subsection}{\numberline {E.3.22}MLModelMgmt}{43}{subsection.E.3.22}%
+\contentsline {subsection}{\numberline {E.3.23}MLModelStorage}{44}{subsection.E.3.23}%
+\contentsline {subsection}{\numberline {E.3.24}MLModelSync}{44}{subsection.E.3.24}%
+\contentsline {subsection}{\numberline {E.3.25}MLModelUpdateMgmt}{44}{subsection.E.3.25}%
+\contentsline {subsection}{\numberline {E.3.26}OS Mgmt}{44}{subsection.E.3.26}%
+\contentsline {subsection}{\numberline {E.3.27}OtherDataMgmt}{44}{subsection.E.3.27}%
+\contentsline {subsection}{\numberline {E.3.28}PatientDataMgmt}{45}{subsection.E.3.28}%
+\contentsline {subsection}{\numberline {E.3.29}PatientDataPush}{45}{subsection.E.3.29}%
+\contentsline {subsection}{\numberline {E.3.30}PatientRecordMgmt}{45}{subsection.E.3.30}%
+\contentsline {subsection}{\numberline {E.3.31}Results}{45}{subsection.E.3.31}%
+\contentsline {subsection}{\numberline {E.3.32}SensorDataMgmt}{46}{subsection.E.3.32}%
+\contentsline {subsection}{\numberline {E.3.33}SMSinterface}{46}{subsection.E.3.33}%
+\contentsline {subsection}{\numberline {E.3.34}SyncMgmt}{46}{subsection.E.3.34}%
+\contentsline {subsection}{\numberline {E.3.35}ThirdPartyAPIConnection}{46}{subsection.E.3.35}%
+\contentsline {subsection}{\numberline {E.3.36}ThirdPartyApiInterface}{47}{subsection.E.3.36}%
+\contentsline {subsection}{\numberline {E.3.37}ThirdPartyDataMgmt}{47}{subsection.E.3.37}%
+\contentsline {subsection}{\numberline {E.3.38}TokenMgmt}{47}{subsection.E.3.38}%
+\contentsline {subsection}{\numberline {E.3.39}UpdateTimer}{47}{subsection.E.3.39}%
+\contentsline {section}{\numberline {E.4}Nodes}{47}{section.E.4}%
+\contentsline {subsection}{\numberline {E.4.1}ControlNode}{47}{subsection.E.4.1}%
+\contentsline {subsection}{\numberline {E.4.2}DBNode (Pilot Deployment)}{48}{subsection.E.4.2}%
+\contentsline {subsection}{\numberline {E.4.3}eHealthPlatform}{48}{subsection.E.4.3}%
+\contentsline {subsection}{\numberline {E.4.4}MLaaS Conn (Pilot Deployment)}{48}{subsection.E.4.4}%
+\contentsline {subsection}{\numberline {E.4.5}MLaaS Service (Dev Deployment)}{48}{subsection.E.4.5}%
+\contentsline {subsection}{\numberline {E.4.6}MLaaS Service (Pilot Deployment)}{48}{subsection.E.4.6}%
+\contentsline {subsection}{\numberline {E.4.7}MLaaSCloud}{48}{subsection.E.4.7}%
+\contentsline {subsection}{\numberline {E.4.8}MLaaSConnectorNode}{48}{subsection.E.4.8}%
+\contentsline {subsection}{\numberline {E.4.9}modelDB (Pilot Deployment)}{48}{subsection.E.4.9}%
+\contentsline {subsection}{\numberline {E.4.10}ModelStorage}{48}{subsection.E.4.10}%
+\contentsline {subsection}{\numberline {E.4.11}Node}{48}{subsection.E.4.11}%
+\contentsline {subsection}{\numberline {E.4.12}Patient Devices}{48}{subsection.E.4.12}%
+\contentsline {subsection}{\numberline {E.4.13}PatientDB}{48}{subsection.E.4.13}%
+\contentsline {subsection}{\numberline {E.4.14}RiskEstimationManagementNode (Pilot Deployment)}{49}{subsection.E.4.14}%
+\contentsline {subsection}{\numberline {E.4.15}RiskEstimationManagmentNode (Dev Deployment)}{49}{subsection.E.4.15}%
+\contentsline {subsection}{\numberline {E.4.16}RiskEstimationMgmtNode}{49}{subsection.E.4.16}%
+\contentsline {subsection}{\numberline {E.4.17}RiskEstimationProcessorNode}{49}{subsection.E.4.17}%
+\contentsline {subsection}{\numberline {E.4.18}RiskEstimationProcessorNode (Dev Deployment)}{49}{subsection.E.4.18}%
+\contentsline {subsection}{\numberline {E.4.19}RiskEstimationProcessorNode (Pilot Deployment)}{49}{subsection.E.4.19}%
+\contentsline {subsection}{\numberline {E.4.20}TODONode}{49}{subsection.E.4.20}%
+\contentsline {section}{\numberline {E.5}Exceptions}{49}{section.E.5}%
+\contentsline {section}{\numberline {E.6}Data types}{50}{section.E.6}%
+\contentsline {section}{\numberline {E.7}Unresolved issues}{55}{section.E.7}%
