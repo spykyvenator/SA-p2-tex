@@ -124,6 +124,28 @@ The database introduces complexity, however it reduces the time to gather all da
 \paragraph{Storing in the hospital information system (his).}
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
 
+% ------------------------------------------------------------
+\subsection*{Architectural Decision 5:
+HIS Manager}
+
+An abstraction we placed between the hospital information system (his) and the pms for translating calls of the system to the HIS api.
+
+\subsubsection*{Employed tactics and patterns}
+Database Abstraction layer
+
+\subsubsection*{Sensitivity points}
+This component handles requests to the his database and should do these in as few operations on the his as possible.
+
+\subsubsection*{Relation to other architectural decisions}
+This is similar to the endpoint components in that it handles all calls to a external database using the healthAPI.
+
+\subsubsection*{Trade-off justification}
+Not including the HIS Manager would require all components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
+
+\subsubsection*{Considered alternatives}
+\paragraph{Polymorphism.}
+Just like the third party api's we could implement a parent child structure where we have a common blueprint that is implemented for every hospital. As at the moment we only have one hospital we work with this would only complicate things and not contribute much. However if the pms needs to work with multiple hospital simultaneously this could be a good option.
+
 % (optional)
 \chapter{Other decisions}\label{sec:otherdecisions}
 
