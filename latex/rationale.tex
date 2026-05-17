@@ -22,38 +22,39 @@ For Software Architecture Part 2 we were asked to add availability and third par
 \section{Qual2: Communication between patient gateways and PMS backend (Av2)}
 \subsection*{Key Decisions}
 \begin{adlist}
-	\item Adding a buffer to the patient's gateway to store data in case the pms service cannot be contacted.
-
-	\item Adding a cronjob component that times how long a patient device has not sent their information through in time and if that is the case contact emergency services with an sms.
+	\item Introduction of \texttt{SyncManager} and an embedded \texttt{LocalBuffer} module on the Patient Gateway App to abstract network topology and handle a continuous 24-hour network failure gracefully
+    \item Implementation of an external \texttt{SMS Gateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
+	\item Integrating a server-side \texttt{Cronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \texttt{Patient Gateway Endpoint} to autonomously identify missing transmissions.
+    \item Offloading detected communication failures to a dedicated \texttt{AlertManager} component to handle prioritized multi-tiered stakeholder notifications and out-of-band communication channels (such as SMS).
 \end{adlist}
 
 % ------------------------------------------------------------
-\subsection*{Architectural Decision 1:
-Adding the cronjob component}
+\subsection*{Architectural Decision 1: Adding the cronjob component}
 
-The cronjob component was introduced to satisfy the need of the pms to measure time between requests and periodically run certain tasks.
+The integration of a decoupled, server-side \texttt{Cronjob} component addresses the fundamental architectural challenge of isolating primary ingestion pathways from orchestration and health-monitoring overhead. In a high-volume telemedicine platform, tracking the live connectivity state of thousands of distributed clients can easily become a performance bottleneck. If the primary network adapters or database access layers are forced to maintain stateful, reactive connection timers for every incoming request, the system risks thread starvation under peak loads, directly threatening overall platform availability.
+
+To mitigate this risk, this decision introduces an asynchronous, pull-based monitoring pattern. The \texttt{Patient Gateway Endpoint} acts as a lightweight, stateless data ingress that simply updates a localized, in-memory metadata table with a \texttt{lastSeen} timestamp whenever a telemetry payload arrives. The \texttt{Cronjob} operates entirely out-of-band as an independent background daemon execution loop, completely decoupled from the main application thread pool. During each execution cycle, it executes a highly optimized, non-blocking batch query against this timestamp index.
+
+By calculating the delta between the current system clock and the expected transmission interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication dropouts without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely agnostic of downstream notification policies or communication mediums. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
 
 \subsubsection*{Employed tactics and patterns}
-name of tactic1,
-name of tactic2,
-name of tactic3
+\begin{itemize}
+    \item \textbf{Implicit Heartbeat (Availability):} Leveraging existing, periodic scheduled telemetry payloads as connection validation vectors, optimizing client-side battery life and conserving restricted cellular bandwidth.
+    \item \textbf{Asynchronous Monitoring Loop (Availability):} Offloading connectivity audits to a distinct background component to insulate core system throughput from monitoring traffic.
+\end{itemize}
 
 \subsubsection*{Sensitivity points}
-Description of the sensitivity points.
+The physical latency of system failure registration is entirely sensitive to the \textit{temporal resolution (polling interval) of the Cronjob scheduler execution loop}. Because the hard upper bound for autonomous backend failure detection is constrained to a 5-minute window, the cron frequency represents a critical system sensitivity point; an overly coarse execution cycle mathematically guarantees a breach of safety constraints, whereas a hyper-aggressive frequency induces severe context-switching overhead on the management node, degrading the performance of adjacent localized services.
 
 \subsubsection*{Relation to other architectural decisions}
-How this decision relates to other architectural decisions.
+This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
 
 \subsubsection*{Trade-off justification}
-Justification of the trade-offs.
+This architecture enforces a deliberate trade-off between \textbf{System Complexity} and \textbf{Performance Optimization/Modifiability}. Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters. However, this trade-off is highly justified within an extra-muros clinical care context; keeping the data ingress entirely stateless ensures that the system can scale seamlessly during mass enrollment phases, while the isolation of the alerting rules guarantees that safety reporting thresholds can be updated over time without requiring redeployments of the primary gateway endpoints.
 
 \subsubsection*{Considered alternatives}
-\paragraph{Name of alternative 1.}
-Describe alternative and why it was not chosen.
-
-\paragraph{Name of alternative 2.}
-Another possibility would be 
-
+\paragraph{Active Peer-to-Peer Polling from Backend to Client.}
+An alternative approach considered was forcing the backend servers to actively broadcast periodic application-layer ping queries to every registered smartphone gateway at 60-second intervals to verify connection health. This alternative was rejected because active background radio polling rapidly drains the edge device's battery, violating the core user experience constraint of low physical invasiveness in the patient's day-to-day life, and scales poorly due to the compounding financial and bandwidth costs of continuous cell-tower polling.
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 2:
 ThirdPartyApi's}
