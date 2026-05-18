@@ -2,19 +2,24 @@
 \contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
 \contentsline {chapter}{\numberline {2}QAS Decisions}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}{5}{section.2.1}%
-\contentsline {paragraph}{Single component.}{5}{section*.9}%
-\contentsline {paragraph}{every component just directly contacts the needed user.}{6}{section*.16}%
-\contentsline {paragraph}{We offer multiple components, each for a certain task to be communicated to a user.}{6}{section*.17}%
-\contentsline {paragraph}{Storing in the hospital information system (his).}{6}{section*.24}%
-\contentsline {paragraph}{Putting everything in the same database (tokens and third party data)}{7}{section*.25}%
-\contentsline {paragraph}{no patient DataStorage}{7}{section*.26}%
-\contentsline {paragraph}{Polymorphism.}{7}{section*.33}%
-\contentsline {section}{\numberline {2.2}Qual2: Communication between patient gateways and PMS backend (Av2)}{7}{section.2.2}%
-\contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{8}{section*.41}%
-\contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{9}{section*.48}%
-\contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{10}{section*.55}%
+\contentsline {paragraph}{Single component.}{6}{section*.9}%
+\contentsline {paragraph}{Storing in the hospital information system (his).}{6}{section*.16}%
+\contentsline {paragraph}{no patient DataStorage}{6}{section*.17}%
+\contentsline {paragraph}{Alternative: Putting Everything into a Single Database.}{7}{section*.24}%
+\contentsline {paragraph}{Polymorphism.}{8}{section*.31}%
+\contentsline {section}{\numberline {2.2}Qual2: Communication between patient gateways and PMS backend (Av2)}{8}{section.2.2}%
+\contentsline {paragraph}{1. Availability over modifiability}{9}{section*.38}%
+\contentsline {paragraph}{2. Monitorability over performance}{9}{section*.39}%
+\contentsline {paragraph}{FIFO storage of data in buffer}{9}{section*.41}%
+\contentsline {paragraph}{Monitorability over performance}{10}{section*.47}%
+\contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{10}{section*.49}%
+\contentsline {paragraph}{Availability over confidentiality}{10}{section*.55}%
+\contentsline {paragraph}{Titel}{10}{section*.57}%
 \contentsline {chapter}{\numberline {3}Other decisions}{11}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Discussion}{12}{chapter.4}%
+\contentsline {paragraph}{Context and Justification:}{11}{section*.59}%
+\contentsline {paragraph}{Context and Justification:}{11}{section*.61}%
+\contentsline {paragraph}{Alternative: Direct Component-to-User Communication.}{12}{section*.68}%
+\contentsline {paragraph}{Alternative: Task-Specific Communication Gateways.}{12}{section*.69}%
 \contentsline {chapter}{\numberline {A}Client-Server View}{13}{appendix.A}%
 \contentsline {chapter}{\numberline {B}Decomposition View}{15}{appendix.B}%
 \contentsline {chapter}{\numberline {C}Deployment view}{18}{appendix.C}%
@@ -94,7 +99,7 @@
 \contentsline {subsection}{\numberline {E.3.30}PatientRecordMgmt}{51}{subsection.E.3.30}%
 \contentsline {subsection}{\numberline {E.3.31}ResetTimer}{51}{subsection.E.3.31}%
 \contentsline {subsection}{\numberline {E.3.32}Results}{51}{subsection.E.3.32}%
-\contentsline {subsection}{\numberline {E.3.33}SearchToken}{51}{subsection.E.3.33}%
+\contentsline {subsection}{\numberline {E.3.33}SearchToken}{52}{subsection.E.3.33}%
 \contentsline {subsection}{\numberline {E.3.34}SensorDataMgmt}{52}{subsection.E.3.34}%
 \contentsline {subsection}{\numberline {E.3.35}ShutDown}{52}{subsection.E.3.35}%
 \contentsline {subsection}{\numberline {E.3.36}SMSinterface}{52}{subsection.E.3.36}%
@@ -111,8 +116,8 @@
 \contentsline {subsection}{\numberline {E.4.4}MLaaS Conn (Pilot Deployment)}{54}{subsection.E.4.4}%
 \contentsline {subsection}{\numberline {E.4.5}MLaaS Service (Dev Deployment)}{54}{subsection.E.4.5}%
 \contentsline {subsection}{\numberline {E.4.6}MLaaS Service (Pilot Deployment)}{54}{subsection.E.4.6}%
-\contentsline {subsection}{\numberline {E.4.7}MLaaSCloud}{54}{subsection.E.4.7}%
-\contentsline {subsection}{\numberline {E.4.8}MLaaSConnectorNode}{54}{subsection.E.4.8}%
+\contentsline {subsection}{\numberline {E.4.7}MLaaSCloud}{55}{subsection.E.4.7}%
+\contentsline {subsection}{\numberline {E.4.8}MLaaSConnectorNode}{55}{subsection.E.4.8}%
 \contentsline {subsection}{\numberline {E.4.9}modelDB (Pilot Deployment)}{55}{subsection.E.4.9}%
 \contentsline {subsection}{\numberline {E.4.10}ModelStorage}{55}{subsection.E.4.10}%
 \contentsline {subsection}{\numberline {E.4.11}Patient Devices}{55}{subsection.E.4.11}%
@@ -122,9 +127,9 @@
 \contentsline {subsection}{\numberline {E.4.15}RiskEstimationMgmtNode}{55}{subsection.E.4.15}%
 \contentsline {subsection}{\numberline {E.4.16}RiskEstimationProcessorNode}{55}{subsection.E.4.16}%
 \contentsline {subsection}{\numberline {E.4.17}RiskEstimationProcessorNode (Dev Deployment)}{55}{subsection.E.4.17}%
-\contentsline {subsection}{\numberline {E.4.18}RiskEstimationProcessorNode (Pilot Deployment)}{55}{subsection.E.4.18}%
+\contentsline {subsection}{\numberline {E.4.18}RiskEstimationProcessorNode (Pilot Deployment)}{56}{subsection.E.4.18}%
 \contentsline {subsection}{\numberline {E.4.19}SMS Provider}{56}{subsection.E.4.19}%
 \contentsline {subsection}{\numberline {E.4.20}TODONode}{56}{subsection.E.4.20}%
 \contentsline {section}{\numberline {E.5}Exceptions}{56}{section.E.5}%
 \contentsline {section}{\numberline {E.6}Data types}{56}{section.E.6}%
-\contentsline {section}{\numberline {E.7}Unresolved issues}{61}{section.E.7}%
+\contentsline {section}{\numberline {E.7}Unresolved issues}{62}{section.E.7}%

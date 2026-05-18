@@ -1,5 +1,4 @@
-{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {B.1}{\ignorespaces Context diagram for the decomposition view}}{\reset@font\mlffont 15}{figure.caption.58}}
-{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {B.2}{\ignorespaces Decomposition Third Party Apps}}{\reset@font\mlffont 16}{figure.caption.59}}
-{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {B.3}{\ignorespaces Decomposition of the MLModelManager}}{\reset@font\mlffont 16}{figure.caption.60}}
-{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {B.4}{\ignorespaces Decomposition of the RiskEstimationProcessor}}{\reset@font\mlffont 17}{figure.caption.61}}
-{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {B.5}{\ignorespaces Patient Gateway App Component Diagram}}{\reset@font\mlffont 17}{figure.caption.62}}
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {C.1}{\ignorespaces Context diagram for the deployment view}}{\reset@font\mlffont 18}{figure.caption.77}}
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {C.2}{\ignorespaces Primary deployment diagram}}{\reset@font\mlffont 19}{figure.caption.78}}
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {C.3}{\ignorespaces Pilot Deployment (200 patients, 5 clin models)}}{\reset@font\mlffont 20}{figure.caption.79}}
+{\reset@font\mlffont\mtc@string\contentsline{figure}{\noexpand \leavevmode \numberline {C.4}{\ignorespaces Development Test Deployment (20 patients, 3 clin models)}}{\reset@font\mlffont 21}{figure.caption.80}}
