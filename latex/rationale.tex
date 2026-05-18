@@ -12,30 +12,30 @@ For Software Architecture Part 2 we were asked to add availability and third par
 \section{Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}
 \subsection*{Key Decisions}
 \begin{adlist}
-  \item Including a database in the pms specifically for storing third party patient data
+  \item Including a \nameref{comp:ComponentseHealthPlatformPatientDataStorage} in the pms specifically for storing third party patient data.
 
-  \item Adding a ThirdPartyApi's component that can be extended to poll third party services for data.
+  \item Adding a \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs} component that can be extended to poll third party services for data.
 
-  \item Letting the risk estimation process fetch this third party data and use it for predicting the patient status.
+  \item Letting the \nameref{comp:ComponentseHealthPlatformClinicalJobCreator} fetch this third party data and use it for predicting the patient status.
 \end{adlist}
 
 \section{Qual2: Communication between patient gateways and PMS backend (Av2)}
 \subsection*{Key Decisions}
 \begin{adlist}
-	\item Introduction of \texttt{SyncManager} and an embedded \texttt{LocalBuffer} module on the Patient Gateway App to abstract network topology and handle a continuous 24-hour network failure gracefully
-    \item Implementation of an external \texttt{SMS Gateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
-	\item Integrating a server-side \texttt{Cronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \texttt{Patient Gateway Endpoint} to autonomously identify missing transmissions.
-    \item Offloading detected communication failures to a dedicated \texttt{AlertManager} component to handle prioritized multi-tiered stakeholder notifications and out-of-band communication channels (such as SMS).
+	\item Introduction of \nameref{mod:ComponentsPatientGatewayAppSyncManager} and an embedded \nameref{mod:ComponentsPatientGatewayAppBuffer} module on the \nameref{comp:ComponentsPatientGatewayApp} to abstract network topology and handle a continuous 24-hour network failure gracefully
+    \item Implementation of an external \nameref{comp:ComponentsSMSgateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
+	\item Integrating a server-side \nameref{comp:ComponentseHealthPlatformCronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \nameref{comp:ComponentsPatientGatewayEndpoint} to autonomously identify missing transmissions.
+    \item Offloading detected communication failures to a dedicated \nameref{comp:ComponentseHealthPlatformAlertManager} component to handle prioritized multi-tiered stakeholder notifications and out-of-band communication channels (such as SMS).
 \end{adlist}
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1: Adding the cronjob component}
 
-The integration of a decoupled, server-side \texttt{Cronjob} component addresses the fundamental architectural challenge of isolating primary ingestion pathways from orchestration and health-monitoring overhead. In a high-volume telemedicine platform, tracking the live connectivity state of thousands of distributed clients can easily become a performance bottleneck. If the primary network adapters or database access layers are forced to maintain stateful, reactive connection timers for every incoming request, the system risks thread starvation under peak loads, directly threatening overall platform availability.
+The integration of a decoupled, server-side \nameref{comp:ComponentseHealthPlatformCronjob} component addresses the fundamental architectural challenge of isolating primary ingestion pathways from orchestration and health-monitoring overhead. In a high-volume telemedicine platform, tracking the live connectivity state of thousands of distributed clients can easily become a performance bottleneck. If the primary network adapters or database access layers are forced to maintain stateful, reactive connection timers for every incoming request, the system risks thread starvation under peak loads, directly threatening overall platform availability.
 
-To mitigate this risk, this decision introduces an asynchronous, pull-based monitoring pattern. The \texttt{Patient Gateway Endpoint} acts as a lightweight, stateless data ingress that simply updates a localized, in-memory metadata table with a \texttt{lastSeen} timestamp whenever a telemetry payload arrives. The \texttt{Cronjob} operates entirely out-of-band as an independent background daemon execution loop, completely decoupled from the main application thread pool. During each execution cycle, it executes a highly optimized, non-blocking batch query against this timestamp index.
+To mitigate this risk, this decision introduces an asynchronous, pull-based monitoring pattern. The \nameref{comp:ComponentsPatientGatewayEndpoint} acts as a lightweight, stateless data ingress that simply updates a localized, in-memory metadata table with a \texttt{lastSeen} timestamp whenever a telemetry payload arrives. The \nameref{comp:ComponentseHealthPlatformCronjob} operates entirely out-of-band as an independent background daemon execution loop, completely decoupled from the main application thread pool. During each execution cycle, it executes a highly optimized, non-blocking batch query against this timestamp index.
 
-By calculating the delta between the current system clock and the expected transmission interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication dropouts without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely agnostic of downstream notification policies or communication mediums. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
+By calculating the delta between the current system clock and the expected transmission interval of each active patient profile, the \nameref{comp:ComponentseHealthPlatformCronjob} can autonomously flag communication dropouts without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \nameref{comp:ComponentseHealthPlatformCronjob} remains entirely agnostic of downstream notification policies or communication mediums. Once a failure state is declared, it hands off a structured exception event to the central \nameref{comp:ComponentseHealthPlatformAlertManager}, which dynamically resolves the stakeholder routing logic.
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
