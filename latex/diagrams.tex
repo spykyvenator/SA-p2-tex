@@ -322,9 +322,10 @@ Note that, as this diagram depicts the internal flow between modules within the 
   \begin{tikzpicture}
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\maxwidth{\textwidth}]{InteractionDiagram-Third-Party-New-Data.pdf}};
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
-        \node [fit={(0.8557,1.0000) (0.9989,0.9261)},inner sep=0,hyperlink node={mod:ComponentsThirdPartyServiceThirdPartyAPIsStravaAPI}] {};
+        \node [fit={(0.3948,1.0000) (0.5727,0.9261)},inner sep=0,hyperlink node={mod:ComponentsThirdPartyServiceTokenStorage}] {};
+\node [fit={(0.8557,1.0000) (0.9989,0.9261)},inner sep=0,hyperlink node={mod:ComponentsThirdPartyServiceThirdPartyAPIsStravaAPI}] {};
 \node [fit={(0.6030,1.0000) (0.7874,0.9261)},inner sep=0,hyperlink node={mod:ComponentsThirdPartyServiceThirdPartyAPIsGoogleFitAPI}] {};
-\node [fit={(0.0000,1.0000) (0.2711,0.9261)},inner sep=0,hyperlink node={mod:ComponentsThirdPartyServiceThirdPartySyncService}] {};\node [fit={(0.3807,1.0000) (0.5347,0.9261)},inner sep=0,hyperlink node={int:InterfacesTokenMgmt}] {};
+\node [fit={(0.0000,1.0000) (0.2711,0.9261)},inner sep=0,hyperlink node={mod:ComponentsThirdPartyServiceThirdPartySyncService}] {};
     \end{scope}
     \end{tikzpicture}
   \caption[Third Party New Data]{\label{diag:Interaction:ThirdPartyNewData}Third Party New Data}
