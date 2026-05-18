@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024 Gentoo Linux) (preloaded format=pdflatex 2026.5.10)  18 MAY 2026 12:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024 Gentoo Linux) (preloaded format=pdflatex 2026.5.10)  18 MAY 2026 12:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -672,7 +672,7 @@ File: tikzlibraryfit.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \g_author_size_int=\count326
 \l_author_count_int=\count327
 
-Random number generator initialized to 265519
+Random number generator initialized to 268849
 \c@InstructionCounter=\count328
 \c@InstructionCounter@totc=\count329
 ) (/usr/share/texmf-dist/tex/latex/caption/caption.sty
@@ -1146,14 +1146,14 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 32.
 (./report.mlf5)
 <./images/ComponentDiagram-Context-diagram-for-the-client-server-view.pdf, id=7
-33, 1081.03876pt x 511.9125pt>
+43, 1081.03876pt x 511.9125pt>
 File: ./images/ComponentDiagram-Context-diagram-for-the-client-server-view.pdf 
 Graphic file (type pdf)
 <use ./images/ComponentDiagram-Context-diagram-for-the-client-server-view.pdf>
 Package pdftex.def Info: ./images/ComponentDiagram-Context-diagram-for-the-clie
 nt-server-view.pdf  used on input line 39.
 (pdftex.def)             Requested size: 478.00641pt x 226.35138pt.
-<./images/ComponentDiagram-Primary-diagram-of-the-client-server-view.pdf, id=73
+<./images/ComponentDiagram-Primary-diagram-of-the-client-server-view.pdf, id=74
 4, 1425.325pt x 623.32875pt>
 File: ./images/ComponentDiagram-Primary-diagram-of-the-client-server-view.pdf G
 raphic file (type pdf)
@@ -1175,14 +1175,14 @@ Appendix B.
 
 (./report.mlf6)
 <./images/ComponentDiagram-Context-diagram-for-the-decomposition-view.pdf, id=7
-55, 560.0925pt x 247.92625pt>
+65, 560.0925pt x 247.92625pt>
 File: ./images/ComponentDiagram-Context-diagram-for-the-decomposition-view.pdf 
 Graphic file (type pdf)
 <use ./images/ComponentDiagram-Context-diagram-for-the-decomposition-view.pdf>
 Package pdftex.def Info: ./images/ComponentDiagram-Context-diagram-for-the-deco
 mposition-view.pdf  used on input line 69.
 (pdftex.def)             Requested size: 478.00641pt x 211.60083pt.
-<./images/ComponentDiagram-Decomposition-Third-Party-Apps.pdf, id=756, 443.6575
+<./images/ComponentDiagram-Decomposition-Third-Party-Apps.pdf, id=766, 443.6575
 pt x 503.8825pt>
 File: ./images/ComponentDiagram-Decomposition-Third-Party-Apps.pdf Graphic file
  (type pdf)
@@ -1190,7 +1190,7 @@ File: ./images/ComponentDiagram-Decomposition-Third-Party-Apps.pdf Graphic file
 Package pdftex.def Info: ./images/ComponentDiagram-Decomposition-Third-Party-Ap
 ps.pdf  used on input line 79.
 (pdftex.def)             Requested size: 443.6564pt x 503.88127pt.
-<./images/ComponentDiagram-Decomposition-of-the-MLModelManager.pdf, id=757, 812
+<./images/ComponentDiagram-Decomposition-of-the-MLModelManager.pdf, id=767, 812
 .03375pt x 275.0275pt>
 File: ./images/ComponentDiagram-Decomposition-of-the-MLModelManager.pdf Graphic
  file (type pdf)
@@ -1199,7 +1199,7 @@ Package pdftex.def Info: ./images/ComponentDiagram-Decomposition-of-the-MLModel
 Manager.pdf  used on input line 87.
 (pdftex.def)             Requested size: 478.00641pt x 161.89551pt.
 <./images/ComponentDiagram-Decomposition-of-the-RiskEstimationProcessor.pdf, id
-=758, 714.67pt x 342.27875pt>
+=768, 714.67pt x 342.27875pt>
 File: ./images/ComponentDiagram-Decomposition-of-the-RiskEstimationProcessor.pd
 f Graphic file (type pdf)
 <use ./images/ComponentDiagram-Decomposition-of-the-RiskEstimationProcessor.pdf
@@ -1207,7 +1207,7 @@ f Graphic file (type pdf)
 Package pdftex.def Info: ./images/ComponentDiagram-Decomposition-of-the-RiskEst
 imationProcessor.pdf  used on input line 95.
 (pdftex.def)             Requested size: 478.00641pt x 228.93385pt.
-<./images/ComponentDiagram-Patient-Gateway-App-Component-Diagram.pdf, id=759, 9
+<./images/ComponentDiagram-Patient-Gateway-App-Component-Diagram.pdf, id=769, 9
 25.4575pt x 489.83pt>
 File: ./images/ComponentDiagram-Patient-Gateway-App-Component-Diagram.pdf Graph
 ic file (type pdf)
@@ -1243,7 +1243,7 @@ Appendix C.
 \openout4 = `report.mtc'.
 
 (./report.mlf7)
-<./images/DeploymentDiagram-Context-diagram-for-the-deployment-view.pdf, id=802
+<./images/DeploymentDiagram-Context-diagram-for-the-deployment-view.pdf, id=812
 , 801.99625pt x 224.84pt>
 File: ./images/DeploymentDiagram-Context-diagram-for-the-deployment-view.pdf Gr
 aphic file (type pdf)
@@ -1251,7 +1251,7 @@ aphic file (type pdf)
 Package pdftex.def Info: ./images/DeploymentDiagram-Context-diagram-for-the-dep
 loyment-view.pdf  used on input line 129.
 (pdftex.def)             Requested size: 478.00641pt x 134.01303pt.
-<./images/DeploymentDiagram-Primary-deployment-diagram.pdf, id=803, 1097.09875p
+<./images/DeploymentDiagram-Primary-deployment-diagram.pdf, id=813, 1097.09875p
 t x 845.1575pt>
 File: ./images/DeploymentDiagram-Primary-deployment-diagram.pdf Graphic file (t
 ype pdf)
@@ -1260,7 +1260,7 @@ Package pdftex.def Info: ./images/DeploymentDiagram-Primary-deployment-diagram.
 pdf  used on input line 139.
 (pdftex.def)             Requested size: 478.00641pt x 368.23376pt.
 <./images/DeploymentDiagram-Pilot-Deployment-200-patients-5-clin-models-.pdf, i
-d=804, 1213.53375pt x 939.51pt>
+d=814, 1213.53375pt x 939.51pt>
 File: ./images/DeploymentDiagram-Pilot-Deployment-200-patients-5-clin-models-.p
 df Graphic file (type pdf)
 <use ./images/DeploymentDiagram-Pilot-Deployment-200-patients-5-clin-models-.pd
@@ -1269,7 +1269,7 @@ Package pdftex.def Info: ./images/DeploymentDiagram-Pilot-Deployment-200-patien
 ts-5-clin-models-.pdf  used on input line 151.
 (pdftex.def)             Requested size: 478.00641pt x 370.07738pt.
 <./images/DeploymentDiagram-Development-Test-Deployment-20-patients-3-clin-mode
-ls-.pdf, id=805, 831.105pt x 969.6225pt>
+ls-.pdf, id=815, 831.105pt x 969.6225pt>
 File: ./images/DeploymentDiagram-Development-Test-Deployment-20-patients-3-clin
 -models-.pdf Graphic file (type pdf)
 <use ./images/DeploymentDiagram-Development-Test-Deployment-20-patients-3-clin-
@@ -1302,7 +1302,7 @@ Appendix D.
 [21
 
 ]
-<./images/InteractionDiagram-Risk-estimation-process.pdf, id=871, 1671.24374pt 
+<./images/InteractionDiagram-Risk-estimation-process.pdf, id=880, 1671.24374pt 
 x 601.24625pt>
 File: ./images/InteractionDiagram-Risk-estimation-process.pdf Graphic file (typ
 e pdf)
@@ -1316,7 +1316,7 @@ f  used on input line 181.
 
  <./images/InteractionDiagram-Risk-estimation-process.pdf, page is rotated 90 d
 egrees>]
-<./images/InteractionDiagram-Compute-clinical-model-result.pdf, id=887, 1384.17
+<./images/InteractionDiagram-Compute-clinical-model-result.pdf, id=896, 1384.17
 125pt x 695.59875pt>
 File: ./images/InteractionDiagram-Compute-clinical-model-result.pdf Graphic fil
 e (type pdf)
@@ -1324,7 +1324,7 @@ e (type pdf)
 Package pdftex.def Info: ./images/InteractionDiagram-Compute-clinical-model-res
 ult.pdf  used on input line 198.
 (pdftex.def)             Requested size: 478.00641pt x 240.21533pt.
-<./images/InteractionDiagram-MLModel-Synchronization.pdf, id=905, 1280.785pt x 
+<./images/InteractionDiagram-MLModel-Synchronization.pdf, id=914, 1280.785pt x 
 521.95pt>
 File: ./images/InteractionDiagram-MLModel-Synchronization.pdf Graphic file (typ
 e pdf)
@@ -1332,7 +1332,7 @@ e pdf)
 Package pdftex.def Info: ./images/InteractionDiagram-MLModel-Synchronization.pd
 f  used on input line 219.
 (pdftex.def)             Requested size: 478.00641pt x 194.79097pt.
-<./images/InteractionDiagram-Processing-MLModel-updates.pdf, id=924, 1358.07375
+<./images/InteractionDiagram-Processing-MLModel-updates.pdf, id=933, 1358.07375
 pt x 842.14626pt>
 File: ./images/InteractionDiagram-Processing-MLModel-updates.pdf Graphic file (
 type pdf)
@@ -1340,7 +1340,7 @@ type pdf)
 Package pdftex.def Info: ./images/InteractionDiagram-Processing-MLModel-updates
 .pdf  used on input line 237.
 (pdftex.def)             Requested size: 478.00641pt x 296.41327pt.
-<./images/InteractionDiagram-Incoming-sensor-data.pdf, id=945, 1275.76625pt x 2
+<./images/InteractionDiagram-Incoming-sensor-data.pdf, id=954, 1275.76625pt x 2
 83.0575pt>
 File: ./images/InteractionDiagram-Incoming-sensor-data.pdf Graphic file (type p
 df)
@@ -1348,7 +1348,7 @@ df)
 Package pdftex.def Info: ./images/InteractionDiagram-Incoming-sensor-data.pdf  
 used on input line 257.
 (pdftex.def)             Requested size: 478.00641pt x 106.05559pt.
-<./images/InteractionDiagram-Combining-ClinicalModelJob-results.pdf, id=951, 10
+<./images/InteractionDiagram-Combining-ClinicalModelJob-results.pdf, id=960, 10
 09.7725pt x 247.92625pt>
 File: ./images/InteractionDiagram-Combining-ClinicalModelJob-results.pdf Graphi
 c file (type pdf)
@@ -1370,7 +1370,7 @@ tated 90 degrees>]
 
 [25 <./images/InteractionDiagram-Combining-ClinicalModelJob-results.pdf, page i
 s rotated 90 degrees>]
-<./images/InteractionDiagram-Third-party-polling.pdf, id=986, 2316.655pt x 528.
+<./images/InteractionDiagram-Third-party-polling.pdf, id=995, 2316.655pt x 528.
 97626pt>
 File: ./images/InteractionDiagram-Third-party-polling.pdf Graphic file (type pd
 f)
@@ -1384,7 +1384,7 @@ sed on input line 287.
 
  <./images/InteractionDiagram-Third-party-polling.pdf, page is rotated 90 degre
 es>]
-<./images/InteractionDiagram-Store-tokens.pdf, id=1000, 558.085pt x 189.70876pt
+<./images/InteractionDiagram-Store-tokens.pdf, id=1009, 558.085pt x 189.70876pt
 >
 File: ./images/InteractionDiagram-Store-tokens.pdf Graphic file (type pdf)
 <use ./images/InteractionDiagram-Store-tokens.pdf>
@@ -1392,7 +1392,7 @@ Package pdftex.def Info: ./images/InteractionDiagram-Store-tokens.pdf  used on
 input line 303.
 (pdftex.def)             Requested size: 478.00641pt x 162.49213pt.
 <./images/InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-goes-
-down-Detection-during-Communication-App-Side-.pdf, id=1003, 1350.04375pt x 1091
+down-Detection-during-Communication-App-Side-.pdf, id=1012, 1350.04375pt x 1091
 .07625pt>
 File: ./images/InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-
 goes-down-Detection-during-Communication-App-Side-.pdf Graphic file (type pdf)
@@ -1409,7 +1409,7 @@ between-PMS-and-PG-goes-down-Detection-during-Communication-App-Side-.pdf  used
  <./images/InteractionDiagram-Store-tokens.pdf, page is rotated 90 degrees> <./
 images/InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-goes-dow
 n-Detection-during-Communication-App-Side-.pdf, page is rotated 90 degrees>]
-<./images/InteractionDiagram-av2-Patient-gateway-fails.pdf, id=1019, 2031.59pt 
+<./images/InteractionDiagram-av2-Patient-gateway-fails.pdf, id=1028, 2031.59pt 
 x 864.22874pt>
 File: ./images/InteractionDiagram-av2-Patient-gateway-fails.pdf Graphic file (t
 ype pdf)
@@ -1423,7 +1423,7 @@ pdf  used on input line 333.
 
  <./images/InteractionDiagram-av2-Patient-gateway-fails.pdf, page is rotated 90
  degrees>]
-<./images/InteractionDiagram-Update-gateway-push-wait-time.pdf, id=1037, 1474.5
+<./images/InteractionDiagram-Update-gateway-push-wait-time.pdf, id=1046, 1474.5
 0874pt x 196.735pt>
 File: ./images/InteractionDiagram-Update-gateway-push-wait-time.pdf Graphic fil
 e (type pdf)
@@ -1437,7 +1437,7 @@ ime.pdf  used on input line 352.
 
  <./images/InteractionDiagram-Update-gateway-push-wait-time.pdf, page is rotate
 d 90 degrees>]
-<./images/InteractionDiagram-Sensor-Data-Polling.pdf, id=1048, 1779.64874pt x 6
+<./images/InteractionDiagram-Sensor-Data-Polling.pdf, id=1057, 1779.64874pt x 6
 55.44875pt>
 File: ./images/InteractionDiagram-Sensor-Data-Polling.pdf Graphic file (type pd
 f)
@@ -1452,7 +1452,7 @@ sed on input line 367.
  <./images/InteractionDiagram-Sensor-Data-Polling.pdf, page is rotated 90 degre
 es>]
 <./images/InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-goes-
-down-Detection-by-time-out-Back-end-.pdf, id=1062, 1942.25626pt x 907.39pt>
+down-Detection-by-time-out-Back-end-.pdf, id=1071, 1942.25626pt x 907.39pt>
 File: ./images/InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-
 goes-down-Detection-by-time-out-Back-end-.pdf Graphic file (type pdf)
 <use ./images/InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-g
@@ -1652,13 +1652,13 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 4803B6265FC1C05254F3A3DDC62BD893;17067.
  ) 
 Here is how much of TeX's memory you used:
- 41484 strings out of 475322
- 946087 string characters out of 5771094
+ 41485 strings out of 475322
+ 946099 string characters out of 5771094
  1445844 words of memory out of 5000000
  63388 multiletter control sequences out of 15000+600000
  576465 words of font info for 65 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 114i,11n,117p,1828b,928s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 114i,11n,117p,1828b,930s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/fontawesome/FontAwesome.pfb></usr/s
 hare/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dis
 t/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf-dist/fonts/type1/p
@@ -1677,10 +1677,10 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1000.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfti1000.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sfvt1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfx
 c1000.pfb>
-Output written on report.pdf (60 pages, 700639 bytes).
+Output written on report.pdf (60 pages, 701575 bytes).
 PDF statistics:
- 2540 PDF objects out of 2984 (max. 8388607)
- 2366 compressed objects within 24 object streams
- 318 named destinations out of 1000 (max. 500000)
+ 2550 PDF objects out of 2984 (max. 8388607)
+ 2376 compressed objects within 24 object streams
+ 319 named destinations out of 1000 (max. 500000)
  1074 words of extra memory for PDF output out of 10000 (max. 10000000)
 

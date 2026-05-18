@@ -59,7 +59,7 @@ An alternative approach considered was forcing the backend servers to actively b
 \subsection*{Architectural Decision 2:
 ThirdPartyApi's}
 
-Adding the ThirdPartyApi's component and the googlefit and strava children are present to allow easy implementation of new third party components and a common interface to all.
+For contacting third party services we added the ThirdPartyApi's component this is a blueprint implemented by the googlefit and strava children. Working in this way allows new third party services to be implemented by implementing the blueprint component. This ensures that they can be added in less than \texttt{2 weeks}.
 
 \subsubsection*{Employed tactics and patterns}
 Polymorphism,
@@ -75,8 +75,8 @@ This makes the application that bit bigger and more complicated but seems well w
 This could also impact latency of the prediction process.
 
 \subsubsection*{Considered alternatives}
-\paragraph{Name of alternative 1.}
-An alternative could be having a single component to contact all third party apis, however this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement.
+\paragraph{Single component.}
+An alternative could be having a single component to contact all third party apis, however this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement which is important for adding new services in less than 2 weeks. 
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 3:
@@ -128,6 +128,8 @@ The patient DataStorage introduces complexity, however it reduces the time to ga
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
 \paragraph{Putting everything in the same database (tokens and third party data)}
 This would lead to a simpler diagram as we only need one database, however the third party tokens are more sensitive than the data we get back from the third party trackers. Thus we chose to separate these databases as they are used by different components and allow us to provide extra safety for storing the tokens such as encrypting them without losing performance when fetching lots of data from the patient datastorage.
+\paragraph{no patient DataStorage}
+It would be possible to implement this without a patient datastorage, this would mean that on every prediction job we have to fetch all the patient data from the third party services. However adding the datastorage offloads work of the third parties, it reduces latency and with a implementation deadline of 3 months we should have more than enough time to implement this extension.
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 5:
@@ -142,7 +144,7 @@ Database Abstraction layer
 This component handles requests to the his database and should do these in as few operations on the his as possible. The his could have sensitive patient data so it is also necessary to connect the His Manager with as few components as needed.
 
 \subsubsection*{Relation to other architectural decisions}
-The his manager provides abstraction to the his so that the patient gateway endpoint, the clinical job creator and the risk estimator combiner does not have to make multiple health api calls and that in case of an API change in the his we only need to change one component.
+The his manager provides abstraction to the his so that the patient gateway endpoint (as seen in \nameref{diag:Interaction:Incomingsensordata}), the clinical job creator and the risk estimator combiner does not have to make multiple health api calls and that in case of an API change in the his we only need to change one component.
 
 \subsubsection*{Trade-off justification}
 Not including the HIS Manager would require some components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
@@ -153,7 +155,7 @@ Just like the third party api's we could implement a parent child structure wher
 
 % (optional)
 \chapter{Other decisions}\label{sec:otherdecisions}
-
+A simple user-interface is needed on the app where the patient manually can enter his/her third party tokens. This makes it possible to extend the app in less than a month when the alternative would be to integrate the app with the third party services on the smartphone.
 
 
 \chapter{Discussion}\label{sec:discussion}
