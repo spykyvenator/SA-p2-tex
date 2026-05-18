@@ -12,20 +12,20 @@ For Software Architecture Part 2 we were asked to add availability and third par
 \section{Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}
 \subsection*{Key Decisions}
 \begin{adlist}
-  \item Including a database in the pms specifically for storing third party patient data
+  \item Including a \nameref{comp:ComponentseHealthPlatformPatientDataStorage} in the pms specifically for storing third party patient data.
 
-  \item Adding a ThirdPartyApi's component that can be extended to poll third party services for data.
+  \item Adding a \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs} component that can be extended to poll third party services for data.
 
-  \item Letting the risk estimation process fetch this third party data and use it for predicting the patient status.
+  \item Letting the \nameref{comp:ComponentseHealthPlatformClinicalJobCreator} fetch this third party data and use it for predicting the patient status.
 \end{adlist}
 
 \section{Qual2: Communication between patient gateways and PMS backend (Av2)}
 \subsection*{Key Decisions}
 \begin{adlist}
-	\item Implementation of \texttt{SyncManager} and a \texttt{Buffer} module on the Patient Gateway App to handle a continuous 24-hour network failure gracefully.
-    \item Implementation of an external \texttt{SMS Gateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
-	\item Implementation of a server-side \texttt{Cronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \texttt{Patient Gateway Endpoint} to autonomously identify missing transmissions.
-    \item Offloading detected communication failures to a dedicated \texttt{AlertManager} component to handle notifications to stakeholders such as operators, telemedicine and telecommunication.
+	\item Implementation of \nameref{mod:ComponentsPatientGatewayAppSyncManager} and a \nameref{mod:ComponentsPatientGatewayAppBuffer} module on the \nameref{comp:ComponentsPatientGatewayApp} to handle a continuous 24-hour network failure gracefully.
+    \item Implementation of an external \nameref{comp:ComponentsSMSgateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
+	\item Implementation of a server-side \nameref{comp:ComponentseHealthPlatformCronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \nameref{comp:ComponentsPatientGatewayEndpoint} to autonomously identify missing transmissions.
+    \item Offloading detected communication failures to a dedicated \nameref{comp:ComponentseHealthPlatformAlertManager} component to handle notifications to stakeholders such as operators, telemedicine and telecommunication.
 \end{adlist}
 
 % ------------------------------------------------------------
@@ -39,7 +39,7 @@ By calculating the delta between the current system clock and the expected data-
 \begin{itemize}
     \item \textit{Implicit Heartbeat:} Leveraging existing, periodic scheduled payloads as connection validation, optimizing client-side battery life and conserving restricted cellular bandwidth.
     \item \textit{Asynchronous Monitoring Loop:} Offloading connectivity audits to a distinct background component to insulate core system throughput from monitoring traffic.
-    \item \textit{Circulair buffer:} The Buffer is implemented as a circular buffer with a capacity of 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. and only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
+    \item \textit{Circular buffer:} The Buffer is implemented as a circular buffer with a capacity of 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. and only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
@@ -58,7 +58,7 @@ An alternative approach considered was forcing the backend servers to actively b
 \subsection*{Architectural Decision 2:
 ThirdPartyApi's}
 
-Adding the ThirdPartyApi's component and the googlefit and strava children are present to allow easy implementation of new third party components and a common interface to all.
+For contacting third party services we added the ThirdPartyApi's component this is a blueprint implemented by the googlefit and strava children. Working in this way allows new third party services to be implemented by implementing the blueprint component. This ensures that they can be added in less than \texttt{2 weeks}.
 
 \subsubsection*{Employed tactics and patterns}
 Polymorphism,
@@ -67,14 +67,15 @@ Polymorphism,
 Here we need to make sure the patient third party token is not leaked they should be securely stored in our database. Implementation of a new third party service should be as fast as possible, a slim parent class would assure this.
 
 \subsubsection*{Relation to other architectural decisions}
-A common interface with the third party api's impacted our decissions to use the local database as this allows us to connect these components only once making implementation easier.
+A common interface with the third party api's impacted our decissions to use the local database as this allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
 
 \subsubsection*{Trade-off justification}
-This makes the application that bit bigger and more complicated but seems well worth it as we are rewarded with better accuracy at a low cost this could also impact latency of the prediction process.
+This makes the application that bit bigger and more complicated but seems well worth it as we are rewarded with better accuracy at a low cost.
+This could also impact latency of the prediction process.
 
 \subsubsection*{Considered alternatives}
-\paragraph{Name of alternative 1.}
-An alternative could be having a single component to contact all third party apis, however this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement.
+\paragraph{Single component.}
+An alternative could be having a single component to contact all third party apis, however this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement which is important for adding new services in less than 2 weeks.
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 3:
@@ -104,25 +105,34 @@ This seemed like a more viable option compared to the previous alternative but w
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 4:
-Patient DataStorage}
+Patient DataStorage and the token storage}
 
-This is our local database for storing the patient data that can't be stored in the hospital information system.
+These are our local databases for storing the patient data and third party tokens that can't be stored in the hospital information system. At the moment this consists of the third party data, patient status which are stored in the Patient DataStorage and the third party tokens which is stored in the token storage.
 
 \subsubsection*{Employed tactics and patterns}
-Single responsiblity
+Single responsiblity,
+Security Tiering
 
 \subsubsection*{Sensitivity points}
-This database stores the incoming data from the third parties that can be contacted for extra patient data. This could include sensitive data so it should be securely implemented and only accessible from the components that need it.
+The Patient DataStorage stores the incoming data from the third parties that can be contacted for extra patient data and needs to be fast in access as higher latency leads to longer prediction times. The Token storage db includes sensitive data so it should be securely implemented and only accessible from the components that need it.
 
 \subsubsection*{Relation to other architectural decisions}
-This fits in with the Third party api's as these can directly contact the services and store the data here.
+This fits in with the Third party api's as these can directly contact the third party services and store the data here. The patient datastorage is checked by the clinical job creator every time a new prediction job is started for a patient.
+It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}.
+If the patient is not using a third party service or when the third party service is unavailable, the clinical job creator will continue without the third party data.
 
 \subsubsection*{Trade-off justification}
-The database introduces complexity, however it reduces the time to gather all data necessary for predictions.
+The patient DataStorage introduces complexity, however it reduces the time to gather all data necessary for predictions.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Storing in the hospital information system (his).}
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
+
+\paragraph{Putting everything in the same database (tokens and third party data)}
+This would lead to a simpler diagram as we only need one database, however the third party tokens are more sensitive than the data we get back from the third party trackers. Thus we chose to separate these databases as they are used by different components and allow us to provide extra safety for storing the tokens such as encrypting them without losing performance when fetching lots of data from the patient datastorage.
+
+\paragraph{no patient DataStorage}
+It would be possible to implement this without a patient datastorage, this would mean that on every prediction job we have to fetch all the patient data from the third party services. However adding the datastorage offloads work of the third parties, it reduces latency and with a implementation deadline of 3 months we should have more than enough time to implement this extension.
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 5:
@@ -134,13 +144,13 @@ An abstraction we placed between the hospital information system (his) and the p
 Database Abstraction layer
 
 \subsubsection*{Sensitivity points}
-This component handles requests to the his database and should do these in as few operations on the his as possible.
+This component handles requests to the his database and should do these in as few operations on the his as possible. The his could have sensitive patient data so it is also necessary to connect the His Manager with as few components as needed.
 
 \subsubsection*{Relation to other architectural decisions}
-This is similar to the endpoint components in that it handles all calls to a external database using the healthAPI.
+The his manager provides abstraction to the his so that the patient gateway endpoint (as seen in \nameref{diag:Interaction:Incomingsensordata}), the clinical job creator and the risk estimator combiner does not have to make multiple health api calls and that in case of an API change in the his we only need to change one component.
 
 \subsubsection*{Trade-off justification}
-Not including the HIS Manager would require all components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
+Not including the HIS Manager would require some components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Polymorphism.}
@@ -148,7 +158,7 @@ Just like the third party api's we could implement a parent child structure wher
 
 % (optional)
 \chapter{Other decisions}\label{sec:otherdecisions}
-
+A simple user-interface is needed on the app where the patient manually can enter his/her third party tokens. This makes it possible to extend the app in less than a month when the alternative would be to integrate the app with the third party services on the smartphone.
 
 
 \chapter{Discussion}\label{sec:discussion}
