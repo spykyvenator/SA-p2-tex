@@ -68,10 +68,11 @@ Polymorphism,
 Here we need to make sure the patient third party token is not leaked they should be securely stored in our database. Implementation of a new third party service should be as fast as possible, a slim parent class would assure this.
 
 \subsubsection*{Relation to other architectural decisions}
-A common interface with the third party api's impacted our decissions to use the local database as this allows us to connect these components only once making implementation easier.
+A common interface with the third party api's impacted our decissions to use the local database as this allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
 
 \subsubsection*{Trade-off justification}
-This makes the application that bit bigger and more complicated but seems well worth it as we are rewarded with better accuracy at a low cost this could also impact latency of the prediction process.
+This makes the application that bit bigger and more complicated but seems well worth it as we are rewarded with better accuracy at a low cost. 
+This could also impact latency of the prediction process.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Name of alternative 1.}
@@ -105,25 +106,28 @@ This seemed like a more viable option compared to the previous alternative but w
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 4:
-Patient DataStorage}
+Patient DataStorage and the token storage}
 
-This is our local database for storing the patient data that can't be stored in the hospital information system.
+These are our local databases for storing the patient data and third party tokens that can't be stored in the hospital information system. At the moment this consists of the third party data, patient status which are stored in the Patient DataStorage and the third party tokens which is stored in the token storage.
 
 \subsubsection*{Employed tactics and patterns}
-Single responsiblity
+Single responsiblity,
+Security Tiering
 
 \subsubsection*{Sensitivity points}
-This database stores the incoming data from the third parties that can be contacted for extra patient data. This could include sensitive data so it should be securely implemented and only accessible from the components that need it.
+The Patient DataStorage stores the incoming data from the third parties that can be contacted for extra patient data and needs to be fast in access as higher latency leads to longer prediction times. The Token storage db includes sensitive data so it should be securely implemented and only accessible from the components that need it.
 
 \subsubsection*{Relation to other architectural decisions}
-This fits in with the Third party api's as these can directly contact the services and store the data here.
+This fits in with the Third party api's as these can directly contact the third party services and store the data here.
 
 \subsubsection*{Trade-off justification}
-The database introduces complexity, however it reduces the time to gather all data necessary for predictions.
+The patient DataStorage introduces complexity, however it reduces the time to gather all data necessary for predictions.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Storing in the hospital information system (his).}
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
+\paragraph{Putting everything in the same database (tokens and third party data)}
+This would lead to a simpler diagram as we only need one database, however the third party tokens are more sensitive than the data we get back from the third party trackers. Thus we chose to separate these databases as they are used by different components and allow us to provide extra safety for storing the tokens such as encrypting them without losing performance when fetching lots of data from the patient datastorage.
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 5:
@@ -135,13 +139,13 @@ An abstraction we placed between the hospital information system (his) and the p
 Database Abstraction layer
 
 \subsubsection*{Sensitivity points}
-This component handles requests to the his database and should do these in as few operations on the his as possible.
+This component handles requests to the his database and should do these in as few operations on the his as possible. The his could have sensitive patient data so it is also necessary to connect the His Manager with as few components as needed.
 
 \subsubsection*{Relation to other architectural decisions}
-This is similar to the endpoint components in that it handles all calls to a external database using the healthAPI.
+The his manager provides abstraction to the his so that the patient gateway endpoint, the clinical job creator and the risk estimator combiner does not have to make multiple health api calls and that in case of an API change in the his we only need to change one component.
 
 \subsubsection*{Trade-off justification}
-Not including the HIS Manager would require all components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
+Not including the HIS Manager would require some components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Polymorphism.}
