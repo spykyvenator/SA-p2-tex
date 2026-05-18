@@ -40,6 +40,7 @@ Strategy Pattern and Polymorphism
 
 \subsubsection*{Relation to other architectural decisions}
 This blueprint relies directly on our decision to establish a local database layer (\nameref{comp:ComponentseHealthPlatformPatientDataStorage}). This allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
+some changes
 
 \subsubsection*{Trade-off justification}
 This layout makes the system slightly larger and introduces some initial structural overhead because developers have to implement a parent-child structure rather than just writing a direct script. However, this trade-off is highly justified: we trade a small amount of extra upfront code complexity for long-term modifiability.
@@ -215,7 +216,6 @@ This decision relies on AD1: \texttt{SyncManager}, as the emergency call has to 
 \subsubsection*{Trade-off justification}
 \paragraph{Availability over confidentiality}
 Assuming send SMS messages are unencrypted by default, this could introduce a vulnerability where patient identifiers could be intercepted by third parties.
-
 
 \subsubsection*{Considered alternatives}
 \paragraph{Titel}
