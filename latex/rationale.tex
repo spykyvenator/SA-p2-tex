@@ -128,9 +128,8 @@ Just like the third party api's we could implement a parent child structure wher
 \subsection*{Key Decisions}
 \begin{adlist}
 	\item Implementation of \nameref{mod:ComponentsPatientGatewayAppSyncManager} and a \nameref{mod:ComponentsPatientGatewayAppBuffer} module on the \nameref{comp:ComponentsPatientGatewayApp} to handle a continuous 24-hour network failure gracefully.
+    \item Implementation of a server-side \nameref{comp:ComponentseHealthPlatformCronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \nameref{comp:ComponentsPatientGatewayEndpoint} to autonomously identify missing transmissions.
     \item Implementation of an external \nameref{comp:ComponentsSMSgateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
-	\item Implementation of a server-side \nameref{comp:ComponentseHealthPlatformCronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \nameref{comp:ComponentsPatientGatewayEndpoint} to autonomously identify missing transmissions.
-    \item Offloading detected communication failures to a dedicated \nameref{comp:ComponentseHealthPlatformAlertManager} component to handle notifications to stakeholders such as operators, telemedicine and telecommunication.
 \end{adlist}
 
 % ------------------------------------------------------------
@@ -148,6 +147,53 @@ By calculating the delta between the current system clock and the expected data-
 
 \subsubsection*{Sensitivity points}
 
+\subsubsection*{Relation to other architectural decisions}
+This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
+
+\subsubsection*{Trade-off justification}
+This architecture enforces a deliberate trade-off between \textbf{System Complexity} and \textbf{Performance Optimization/Modifiability}. Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters. However, this trade-off is highly justified within an extra-muros clinical care context; keeping the data ingress entirely stateless ensures that the system can scale seamlessly during mass enrollment phases, while the isolation of the alerting rules guarantees that safety reporting thresholds can be updated over time without requiring redeployments of the primary gateway endpoints.
+
+\subsubsection*{Considered alternatives}
+\paragraph{Active Peer-to-Peer Polling from Backend to Client.}
+An alternative approach considered was forcing the backend servers to actively broadcast periodic application-layer ping queries to every registered smartphone gateway at 60-second intervals to verify connection health. This alternative was rejected because active background radio polling rapidly drains the edge device's battery, violating the core user experience constraint of low physical invasiveness in the patient's day-to-day life, and scales poorly due to the compounding financial and bandwidth costs of continuous cell-tower polling.
+% ------------------------------------------------------------
+\subsection*{Architectural Decision 2: Adding the cronjob component}
+
+The integration of a decoupled, server-side \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} component addresses the fundamental architectural challenge of isolating incoming data stream logic from orchestration and health-monitoring overhead. The \texttt{Cronjob} operates as an independent background daemon, which keeps a countdown for every patient's data.
+
+By calculating the delta between the current system clock and the expected data-arrival interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication problems without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely separated of downstream notification policies. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
+
+\subsubsection*{Employed tactics and patterns}
+\begin{itemize}
+    \item \textit{Implicit Heartbeat:} Leveraging existing, periodic scheduled payloads as connection validation, optimizing client-side battery life and conserving restricted cellular bandwidth.
+    \item \textit{Circular buffer:} A circular buffer with a capacity of 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. Only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
+\end{itemize}
+
+\subsubsection*{Sensitivity points}
+
+\subsubsection*{Relation to other architectural decisions}
+This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
+
+\subsubsection*{Trade-off justification}
+This architecture enforces a deliberate trade-off between \textbf{System Complexity} and \textbf{Performance Optimization/Modifiability}. Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters. However, this trade-off is highly justified within an extra-muros clinical care context; keeping the data ingress entirely stateless ensures that the system can scale seamlessly during mass enrollment phases, while the isolation of the alerting rules guarantees that safety reporting thresholds can be updated over time without requiring redeployments of the primary gateway endpoints.
+
+\subsubsection*{Considered alternatives}
+\paragraph{Active Peer-to-Peer Polling from Backend to Client.}
+An alternative approach considered was forcing the backend servers to actively broadcast periodic application-layer ping queries to every registered smartphone gateway at 60-second intervals to verify connection health. This alternative was rejected because active background radio polling rapidly drains the edge device's battery, violating the core user experience constraint of low physical invasiveness in the patient's day-to-day life, and scales poorly due to the compounding financial and bandwidth costs of continuous cell-tower polling.
+% ------------------------------------------------------------
+\subsection*{Architectural Decision 3: Adding the cronjob component}
+
+The integration of a decoupled, server-side \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} component addresses the fundamental architectural challenge of isolating incoming data stream logic from orchestration and health-monitoring overhead. The \texttt{Cronjob} operates as an independent background daemon, which keeps a countdown for every patient's data.
+
+By calculating the delta between the current system clock and the expected data-arrival interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication problems without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely separated of downstream notification policies. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
+
+\subsubsection*{Employed tactics and patterns}
+\begin{itemize}
+    \item \textit{Implicit Heartbeat:} Leveraging existing, periodic scheduled payloads as connection validation, optimizing client-side battery life and conserving restricted cellular bandwidth.
+    \item \textit{Circular buffer:} A circular buffer with a capacity of 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. Only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
+\end{itemize}
+
+\subsubsection*{Sensitivity points}
 
 \subsubsection*{Relation to other architectural decisions}
 This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
@@ -162,7 +208,9 @@ An alternative approach considered was forcing the backend servers to actively b
 % (optional)
 \chapter{Other decisions}\label{sec:otherdecisions}
 A simple user-interface is needed on the app where the patient manually can enter his/her third party tokens. This makes it possible to extend the app in less than a month when the alternative would be to integrate the app with the third party services on the smartphone.
-
+\begin{enumerate}
+    \item Offloading detected communication failures to a dedicated \nameref{comp:ComponentseHealthPlatformAlertManager} component to handle notifications to stakeholders such as operators, telemedicine and telecommunication.
+\end{enumerate}
 
 \chapter{Discussion}\label{sec:discussion}
 % discussion impact extension on initial architecture (use cases...)
