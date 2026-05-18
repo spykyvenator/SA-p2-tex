@@ -142,15 +142,13 @@ Just like we did for the third-party api's, we considered implementing a parent-
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:  SyncManager and Buffer}
-To maintain operational continuity, we introduced SyncManager and a Buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor and state controller for all outbound data transmissions.
-
-Instead of crashing or blocking the data-collection routines, the transaction exception is routed to the SyncManager. The SyncManager immediately transitions the gateway application into a local degraded mode.
+To maintain operational continuity, we introduced \texttt{SyncManager} and a \texttt{Buffer} module directly within the internal infrastructure of the \texttt{Patient Gateway App} component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the \texttt{SyncManager} acts as an interceptor and state controller for all outbound data transmissions. The \texttt{SyncManager} immediately transitions the gateway application into a local degraded mode.
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
     \item By utilizing exponential back-off, we prevent device battery depletion and backend server storming during network reconnection phases.
-    \item The buffer has a capacity for 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. Only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
-    \item \textbf{State Pattern:} The SyncManager acts as the \textit{Context} object, while NormalModeState and DegradedModeState represent the \textit{Concrete States}. The application’s data-routing behavior changes dynamically based on its internal connection state wrapper, encapsulating the complex synchronization logic away from the data collection subcomponents.
+    \item Implementation of ring buffer with FIFO policy: oldest data is automatically overwritten by the newest when storage limits are reached.
+	\item Logging: the buffer performs logging of lost/removed data, which is used for proper reporting of lost data that could not be saved.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
@@ -162,44 +160,47 @@ Instead of crashing or blocking the data-collection routines, the transaction ex
 \subsubsection*{Relation to other architectural decisions}
 
 \subsubsection*{Trade-off justification}
-\paragraph{Availability over modifiability}
+\paragraph{1. Availability over modifiability}
 To achieve higher availability and fault-tolerance, the SyncManager and buffer introduce complexityt of the gateway app. It creates tighter coupling between data acquisition modules and transport layers, which ultimately reduces the system's long-term modifiability.
-\paragraph{Monitorability over performance}
-To satisy the autonomous failure detection, the backend must execute continous checks on liveness states of the gateways. This might introduce a steady performance cost in terms of CPU cycles, database query load, and resource consumption on the backend server.
-\paragraph{Prioritizing of clinical relevance over global data completeness}
-We acknowledge full data recovery cannot be met when patiens phone dies, and therefor focus on prevention and proper report of lost timeslot of data.
-Also, because the buffer space is limited, we made the decision to overwrite old data by assumption the most recent sensor reading contains the highest critical utility for the clinical model's immediate risk estimation calculations when connectivity returns.
-The trade-off is completely acceptable because it strictly honors the 24-hour retention mandate while protecting device performance boundaries.
+\paragraph{2. Monitorability over performance}
+To satisfy the autonomous failure detection, the backend must execute continous checks on liveness states of the gateways. This might introduce a steady performance cost in terms of CPU cycles, database query load, and resource consumption on the backend server.
 
 \subsubsection*{Considered alternatives}
-\paragraph{Block-Arrival Strategy}
-
+\paragraph{FIFO storage of data in buffer}
+Here the newest data would be overwritten to store older patient data, but this design was discarded as it compromises the safety profile.
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 2: Adding the cronjob component}
-
-The integration of a decoupled, server-side \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} component addresses the fundamental architectural challenge of isolating incoming data stream logic from orchestration and health-monitoring overhead. The \texttt{Cronjob} operates as an independent background daemon, which keeps a countdown for every patient's data.
+The integration of a server-side \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} operates as an independent background daemon, tracking the \textit{Expected Arrival Time} for every registered patient device.
 
 By calculating the delta between the current system clock and the expected data-arrival interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication problems without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely separated of downstream notification policies. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
-    \item \textit{Implicit Heartbeat:} Leveraging existing, periodic scheduled payloads as connection validation, optimizing client-side battery life and conserving restricted cellular bandwidth.
+    \item \textit{Implicit Heartbeat tracking:} The system treats regular, scheduled sensor data payloads arriving via the gateway endpoint as an implicit operational heartbeat. Every time a package is processed, the endpoint updates the timestamp to recalculate next expected data. This to minimize network overhead and save bandwidth.
+
+	\item \textbf{Facade Pattern:} The \texttt{AlertManager} serves as a structural Facade for the system's notification layer. It exposes a single, simplified entry point (\texttt{raiseAlert()}) to components like the \texttt{Cronjob}.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
+\begin{enumerate}
+	\item TODO
+\end{enumerate}
 
 \subsubsection*{Relation to other architectural decisions}
 This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
 
 \subsubsection*{Trade-off justification}
-This architecture enforces a deliberate trade-off between \textbf{System Complexity} and \textbf{Performance Optimization/Modifiability}. Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters. However, this trade-off is highly justified within an extra-muros clinical care context; keeping the data ingress entirely stateless ensures that the system can scale seamlessly during mass enrollment phases, while the isolation of the alerting rules guarantees that safety reporting thresholds can be updated over time without requiring redeployments of the primary gateway endpoints.
+\paragraph{Monitorability over performance}
+To monitor and detect failure, the cronjob needs to compute countdowns. The performance degradation is deemed fully acceptable because it provides complete system visibility and satisfies the fundamental safety requirement of ensuring no patient drops off the grid undetected.
 
-\subsubsection*{Considered alternatives}
+
+\subsubsection*{Considered alternatives}bis
 \paragraph{Active Peer-to-Peer Polling from Backend to Client.}
 An alternative approach considered was forcing the backend servers to actively broadcast periodic application-layer ping queries to every registered smartphone gateway at 60-second intervals to verify connection health. This alternative was rejected because active background radio polling rapidly drains the edge device's battery, violating the core user experience constraint of low physical invasiveness in the patient's day-to-day life, and scales poorly due to the compounding financial and bandwidth costs of continuous cell-tower polling.
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 3: Adding external SMS gateway}
-uitleg
+The SMS gateway was added to handle emergency notifications when the communication channel is down.
+If a critical patient event simultaneously triggers an emergency notification (UC3: send emergency notification) while the app is degraded, the \texttt{SyncManager} bypasses the local storage queue.
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
@@ -209,10 +210,12 @@ uitleg
 \subsubsection*{Sensitivity points}
 
 \subsubsection*{Relation to other architectural decisions}
-This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
+This decision relies on AD1: \texttt{SyncManager}, as the emergency call has to be fired from this module.
 
 \subsubsection*{Trade-off justification}
-This architecture enforces a deliberate trade-off between \textbf{System Complexity} and \textbf{Performance Optimization/Modifiability}. Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters. However, this trade-off is highly justified within an extra-muros clinical care context; keeping the data ingress entirely stateless ensures that the system can scale seamlessly during mass enrollment phases, while the isolation of the alerting rules guarantees that safety reporting thresholds can be updated over time without requiring redeployments of the primary gateway endpoints.
+\paragraph{Availability over confidentiality}
+Assuming send SMS messages are unencrypted by default, this could introduce a vulnerability where patient identifiers could be intercepted by third parties.
+
 
 \subsubsection*{Considered alternatives}
 \paragraph{Titel}
