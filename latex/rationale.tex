@@ -118,7 +118,9 @@ Security Tiering
 The Patient DataStorage stores the incoming data from the third parties that can be contacted for extra patient data and needs to be fast in access as higher latency leads to longer prediction times. The Token storage db includes sensitive data so it should be securely implemented and only accessible from the components that need it.
 
 \subsubsection*{Relation to other architectural decisions}
-This fits in with the Third party api's as these can directly contact the third party services and store the data here.
+This fits in with the Third party api's as these can directly contact the third party services and store the data here. The patient datastorage is checked by the clinical job creator every time a new prediction job is started for a patient. 
+It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}. 
+If the patient is not using a third party service or when the third party service is unavailable, the clinical job creator will continue without the third party data.
 
 \subsubsection*{Trade-off justification}
 The patient DataStorage introduces complexity, however it reduces the time to gather all data necessary for predictions.
@@ -126,8 +128,10 @@ The patient DataStorage introduces complexity, however it reduces the time to ga
 \subsubsection*{Considered alternatives}
 \paragraph{Storing in the hospital information system (his).}
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
+
 \paragraph{Putting everything in the same database (tokens and third party data)}
 This would lead to a simpler diagram as we only need one database, however the third party tokens are more sensitive than the data we get back from the third party trackers. Thus we chose to separate these databases as they are used by different components and allow us to provide extra safety for storing the tokens such as encrypting them without losing performance when fetching lots of data from the patient datastorage.
+
 \paragraph{no patient DataStorage}
 It would be possible to implement this without a patient datastorage, this would mean that on every prediction job we have to fetch all the patient data from the third party services. However adding the datastorage offloads work of the third parties, it reduces latency and with a implementation deadline of 3 months we should have more than enough time to implement this extension.
 
