@@ -2,7 +2,9 @@
 
 % (optional)
 \chapter{Introduction}\label{sec:introduction}
-For Software Architecture Part 2 we were asked to add availability and third party data polling to the pms system.
+For Software Architecture Part 2 we chose to add the third party services (M1) and availability (Av2).
+This means we had to add a way for utilizing the data from third party fitness tracking services to improve the clinical models accuracy and make sure that when communication between the patient gateway and the pms (Patient Monitoring System) backend fails there is an alternative way of contacting the patient or the service operator.
+To accomplish this we zoom in on the prediction pipeline and the communication channel between the pms and the patient gateway.
 
 
 \chapter{QAS Decisions}\label{sec:decisions}
@@ -81,9 +83,9 @@ Security Tiering
 The Patient DataStorage stores the incoming data from the third parties that can be contacted for extra patient data and needs to be fast in access as higher latency leads to longer prediction times. The Token storage db includes sensitive data so it should be securely implemented and only accessible from the components that need it.
 
 \subsubsection*{Relation to other architectural decisions}
-This fits in with the Third party api's as these can directly contact the third party services and store the data here. The patient datastorage is checked by the clinical job creator every time a new prediction job is started for a patient.
-It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}.
-If the patient is not using a third party service or when the third party service is unavailable, the clinical job creator will continue without the third party data.
+This fits in with the Third party api's as these can directly contact the third party services and store the data here. The patient datastorage is checked by the clinical job creator every time a new prediction job is started for a patient. 
+It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}. 
+If the patient is not using a third party service or when the third party service or patient database is unavailable, the clinical job creator will continue without the third party data.
 
 \subsubsection*{Trade-off justification}
 The patient DataStorage introduces complexity, however it reduces the time to gather all data necessary for predictions.
