@@ -13,12 +13,13 @@
 \contentsline {paragraph}{FIFO storage of data in buffer}{9}{section*.41}%
 \contentsline {paragraph}{Monitorability over performance}{10}{section*.47}%
 \contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{10}{section*.49}%
-\contentsline {paragraph}{Titel}{10}{section*.56}%
+\contentsline {paragraph}{Availability over confidentiality}{10}{section*.55}%
+\contentsline {paragraph}{Titel}{10}{section*.57}%
 \contentsline {chapter}{\numberline {3}Other decisions}{11}{chapter.3}%
-\contentsline {paragraph}{Context and Justification:}{11}{section*.58}%
-\contentsline {paragraph}{Context and Justification:}{11}{section*.60}%
-\contentsline {paragraph}{Alternative: Direct Component-to-User Communication.}{12}{section*.67}%
-\contentsline {paragraph}{Alternative: Task-Specific Communication Gateways.}{12}{section*.68}%
+\contentsline {paragraph}{Context and Justification:}{11}{section*.59}%
+\contentsline {paragraph}{Context and Justification:}{11}{section*.61}%
+\contentsline {paragraph}{Alternative: Direct Component-to-User Communication.}{12}{section*.68}%
+\contentsline {paragraph}{Alternative: Task-Specific Communication Gateways.}{12}{section*.69}%
 \contentsline {chapter}{\numberline {A}Client-Server View}{13}{appendix.A}%
 \contentsline {chapter}{\numberline {B}Decomposition View}{15}{appendix.B}%
 \contentsline {chapter}{\numberline {C}Deployment view}{18}{appendix.C}%
