@@ -22,25 +22,24 @@ For Software Architecture Part 2 we were asked to add availability and third par
 \section{Qual2: Communication between patient gateways and PMS backend (Av2)}
 \subsection*{Key Decisions}
 \begin{adlist}
-	\item Introduction of \texttt{SyncManager} and an embedded \texttt{LocalBuffer} module on the Patient Gateway App to abstract network topology and handle a continuous 24-hour network failure gracefully
+	\item Implementation of \texttt{SyncManager} and a \texttt{Buffer} module on the Patient Gateway App to handle a continuous 24-hour network failure gracefully.
     \item Implementation of an external \texttt{SMS Gateway} to route emergency notifications over standard GSM signaling when IP-based transport links are non-operational.
-	\item Integrating a server-side \texttt{Cronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \texttt{Patient Gateway Endpoint} to autonomously identify missing transmissions.
-    \item Offloading detected communication failures to a dedicated \texttt{AlertManager} component to handle prioritized multi-tiered stakeholder notifications and out-of-band communication channels (such as SMS).
+	\item Implementation of a server-side \texttt{Cronjob} component that acts as a periodic timer loop, auditing liveness states tracking at the \texttt{Patient Gateway Endpoint} to autonomously identify missing transmissions.
+    \item Offloading detected communication failures to a dedicated \texttt{AlertManager} component to handle notifications to stakeholders such as operators, telemedicine and telecommunication.
 \end{adlist}
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1: Adding the cronjob component}
 
-The integration of a decoupled, server-side \texttt{Cronjob} component addresses the fundamental architectural challenge of isolating primary ingestion pathways from orchestration and health-monitoring overhead. In a high-volume telemedicine platform, tracking the live connectivity state of thousands of distributed clients can easily become a performance bottleneck. If the primary network adapters or database access layers are forced to maintain stateful, reactive connection timers for every incoming request, the system risks thread starvation under peak loads, directly threatening overall platform availability.
+The integration of a decoupled, server-side \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} component addresses the fundamental architectural challenge of isolating incoming data stream logic from orchestration and health-monitoring overhead. The \texttt{Cronjob} operates as an independent background daemon, which keeps a countdown for every patient's data.
 
-To mitigate this risk, this decision introduces an asynchronous, pull-based monitoring pattern. The \texttt{Patient Gateway Endpoint} acts as a lightweight, stateless data ingress that simply updates a localized, in-memory metadata table with a \texttt{lastSeen} timestamp whenever a telemetry payload arrives. The \texttt{Cronjob} operates entirely out-of-band as an independent background daemon execution loop, completely decoupled from the main application thread pool. During each execution cycle, it executes a highly optimized, non-blocking batch query against this timestamp index.
-
-By calculating the delta between the current system clock and the expected transmission interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication dropouts without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely agnostic of downstream notification policies or communication mediums. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
+By calculating the delta between the current system clock and the expected data-arrival interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication problems without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely separated of downstream notification policies. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
-    \item \textbf{Implicit Heartbeat (Availability):} Leveraging existing, periodic scheduled telemetry payloads as connection validation vectors, optimizing client-side battery life and conserving restricted cellular bandwidth.
-    \item \textbf{Asynchronous Monitoring Loop (Availability):} Offloading connectivity audits to a distinct background component to insulate core system throughput from monitoring traffic.
+    \item \textit{Implicit Heartbeat:} Leveraging existing, periodic scheduled payloads as connection validation, optimizing client-side battery life and conserving restricted cellular bandwidth.
+    \item \textit{Asynchronous Monitoring Loop:} Offloading connectivity audits to a distinct background component to insulate core system throughput from monitoring traffic.
+    \item \textit{Circulair buffer:} The Buffer is implemented as a circular buffer with a capacity of 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. and only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
