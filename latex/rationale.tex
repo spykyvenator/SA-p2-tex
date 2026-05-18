@@ -13,114 +13,122 @@ To accomplish this we zoom in on the prediction pipeline and the communication c
 
 \section{Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}
 \subsection*{Key Decisions}
+To get  third party data into our system without breaking anything that already works or slowing down our main prediction engine, we made the following four key architectural decisions:
 \begin{adlist}
-  \item Including a \nameref{comp:ComponentseHealthPlatformPatientDataStorage} in the pms specifically for storing third party patient data.
+	\item \textbf{Third-Party API Blueprint:} We introduced an abstract parent component called \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}. This acts as a reusable blueprint that child components (like \texttt{StravaAPI} and \texttt{GoogleFitAPI}) implement. It hides all the API details from the rest of our app.
 
-  \item Adding a \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs} component that can be extended to poll third party services for data.
+	\item \textbf{Third party storage} We included a \nameref{comp:ComponentseHealthPlatformPatientDataStorage} in the pms specifically for storing third party patient data.
 
-  \item Letting the \nameref{comp:ComponentseHealthPlatformClinicalJobCreator} fetch this third party data and use it for predicting the patient status.
+	\item \textbf{Token Storage} We included a seperate storage \nameref{mod:ComponentsThirdPartyServiceTokenStorage} for sensitive tokens.
+
+  \item \textbf{HIS Manager} We placed a component, \nameref{comp:ComponentseHealthPlatformHISManager}, between our platform and the hospital information system.
 \end{adlist}
 
-\subsection*{Architectural Decision 2:
+\subsection*{Architectural Decision 1:
 ThirdPartyApi's}
 
-For contacting third party services we added the ThirdPartyApi's component this is a blueprint implemented by the googlefit and strava children. Working in this way allows new third party services to be implemented by implementing the blueprint component. This ensures that they can be added in less than \texttt{2 weeks}.
+For contacting third party services we added the \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs} component. This serves as an abstract parent blueprin implemented by the googlefit and strava children. Working in this way allows new third party services to be implemented by implementing the blueprint component. This ensures that they can be added in less than \texttt{2 weeks}.
 
 \subsubsection*{Employed tactics and patterns}
-Polymorphism,
+Strategy Pattern and Polymorphism
 
 \subsubsection*{Sensitivity points}
-Here we need to make sure the patient third party token is not leaked they should be securely stored in our database. Implementation of a new third party service should be as fast as possible, a slim parent class would assure this.
+\begin{itemize}
+	\item \textbf{Interface Stability:} The development speed of adding a new service is highly sensitive to how well-designed the parent class is. If the abstract blueprint is too bloated or changes frequently, it will cause ripple effects across all child classes, breaking our 2-week implementation guarantee.
+	\item \textbf{Credential Exposure Risk:} Because these sub-components handle active network connections to external servers, they are a primary target for security leaks. We must strictly ensure that third-party authentication tokens are never logged or exposed during API handshakes; they must be securely fetched on-demand and kept isolated from public layers.
+\end{itemize}
 
 \subsubsection*{Relation to other architectural decisions}
-A common interface with the third party api's impacted our decissions to use the local database as this allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
+This blueprint relies directly on our decision to establish a local database layer (\nameref{comp:ComponentseHealthPlatformPatientDataStorage}). This allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
 
 \subsubsection*{Trade-off justification}
-This makes the application that bit bigger and more complicated but seems well worth it as we are rewarded with better accuracy at a low cost.
+This layout makes the system slightly larger and introduces some initial structural overhead because developers have to implement a parent-child structure rather than just writing a direct script. However, this trade-off is highly justified: we trade a small amount of extra upfront code complexity for long-term modifiability.
 This could also impact latency of the prediction process.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Single component.}
-An alternative could be having a single component to contact all third party apis, however this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement which is important for adding new services in less than 2 weeks.
+An alternative could be having a single, large component to contact all third party apis. However this would lead to a cluttered class once more and more third party apis are added. This parent child structure also gives a clear blueprint for developers to implement which is important for adding new services in less than 2 weeks.
 
 % ------------------------------------------------------------
-\subsection*{Architectural Decision 3:
-Patient Gateway Endpoint and the Operator Gateway Endpoint}
+\subsection*{Architectural Decision 2:
+	Patient DataStorage }
 
-This is the entry and exit point for communication between the pms and the patients gateway (their smartphone) or the service operators like doctors, nurses maintenance engineers and such.
+This is our local database \nameref{comp:ComponentseHealthPlatformPatientDataStorage} for storing the patient thirdparty data and the patient's status. Those cannot be stored in the hospital information system.
 
-\subsubsection*{Employed tactics and patterns}
-Single responsiblity,
-Role based access control.
-
-\subsubsection*{Sensitivity points}
-For these components it is important to make sure they only connect to the components they need. Connecting them to unnecessary components could lead to a user accessing the wrong information.
-
-\subsubsection*{Relation to other architectural decisions}
-Making every user type a component is architecturally easy as for every component we have to think what user type needs access to it and connect it with the corresponding endpoint.
-
-\subsubsection*{Trade-off justification}
-
-
-\subsubsection*{Considered alternatives}
-\paragraph{every component just directly contacts the needed user.}
-We could have every component that needs access to a user contact him/her directly. This seemed like a bad design to us as connectivity issues are better found if all communication hapens in one component. Our solution allows for less code duplication as there are many common communication functions such as retries and calls to make on failure that can be implemented in the same way for almost all communication calls.
-
-\paragraph{We offer multiple components, each for a certain task to be communicated to a user.}
-This seemed like a more viable option compared to the previous alternative but we did not take it as we again have the problem of having to look in multiple places when the communication fails. It also gives a harder time to see what components the gateway can connect to which is something that could be useful for the security team.
-
-% ------------------------------------------------------------
-\subsection*{Architectural Decision 4:
-Patient DataStorage and the token storage}
-
-These are our local databases for storing the patient data and third party tokens that can't be stored in the hospital information system. At the moment this consists of the third party data, patient status which are stored in the Patient DataStorage and the third party tokens which is stored in the token storage.
+Instead of our clinical prediction engines making real-time, synchronous network calls to external api's like Strava or Google Fit whenever a risk evaluation job runs, the system queries this local storage. If a third-party service experiences an outage or a latency spike, the prediction pipeline continues uninterrupted by falling back onto the last known valid data cached here.
 
 \subsubsection*{Employed tactics and patterns}
-Single responsiblity,
-Security Tiering
+Single responsiblity and Data Caching
 
 \subsubsection*{Sensitivity points}
-The Patient DataStorage stores the incoming data from the third parties that can be contacted for extra patient data and needs to be fast in access as higher latency leads to longer prediction times. The Token storage db includes sensitive data so it should be securely implemented and only accessible from the components that need it.
+\begin{itemize}
+	\item \textbf{Cache Freshness and Outdated Predictions:} The clinical value of using lifestyle metrics is highly sensitive to how frequently our background tasks update this database. If the update intervals are spaced too far apart, the clinical job engine will process stale tracker data, which could reduce the accuracy gains expected by the clinical model.
+	\item \textbf{Performance:} Since this repository is queried every time a new clinical job creator process kicks off, its access latency must remain minimal. If query execution times degrade under high system loads, it will propagate directly into the overall duration of the patient risk estimation timeline.
+\end{itemize}
+
 
 \subsubsection*{Relation to other architectural decisions}
-This fits in with the Third party api's as these can directly contact the third party services and store the data here. The patient datastorage is checked by the clinical job creator every time a new prediction job is started for a patient. 
-It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}. 
+This decision works hand-in-hand with the abstract plugin blueprints (\nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}]). The concrete child integration plugins handle the external API polling logic and continuously push fresh data packages directly into this storage component. the clinical job creator checks the recentness of the available rows in this cache databas. It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}.
 If the patient is not using a third party service or when the third party service or patient database is unavailable, the clinical job creator will continue without the third party data.
 
 \subsubsection*{Trade-off justification}
-The patient DataStorage introduces complexity, however it reduces the time to gather all data necessary for predictions.
+By adding a dedicated local storage layer, we introduce extra data management overhead, structural database footprint, and complexity. However, this trade-off is incredibly beneficial: we completely decouple our core clinical pipeline from unreliable third-party network links, ensuring high system availability and predictable estimation performance under all operational conditions.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Storing in the hospital information system (his).}
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
 
-\paragraph{Putting everything in the same database (tokens and third party data)}
-This would lead to a simpler diagram as we only need one database, however the third party tokens are more sensitive than the data we get back from the third party trackers. Thus we chose to separate these databases as they are used by different components and allow us to provide extra safety for storing the tokens such as encrypting them without losing performance when fetching lots of data from the patient datastorage.
-
 \paragraph{no patient DataStorage}
 It would be possible to implement this without a patient datastorage, this would mean that on every prediction job we have to fetch all the patient data from the third party services. However adding the datastorage offloads work of the third parties, it reduces latency and with a implementation deadline of 3 months we should have more than enough time to implement this extension.
 
-% ------------------------------------------------------------
-\subsection*{Architectural Decision 5:
-HIS Manager}
+\subsection*{Architectural Decision 3: Token Storage}
 
-An abstraction we placed between the hospital information system (his) and the pms for translating calls of the system to the HIS api.
+To handle the highly sensitive nature of user authentication tokens, we decided to separate them entirely from other storage systems by introducing a dedicated \nameref{mod:ComponentsThirdPartyServiceTokenStorage} component. This serves as a standalone, tightly locked cryptographic vault specifically for storing tokens to poll third-party platforms like Google Fit and Strava.
+
+\subsubsection*{Employed tactics and patterns}
+Information Encapsulation, Security Tiering
+
+\subsubsection*{Sensitivity points}
+\begin{itemize}
+	\item \textbf{Encryption Latency vs. Throughput:} Because tokens are cryptographically secured at rest, reading them requires decryption operations. The retrieval mechanism is highly sensitive to encryption configuration choices; if decryption handshakes take too long, it could choke background synchronization workers when they attempt mass data polls for multiple users simultaneously.
+	\item \textbf{Access Vector Control:} The entire point of this vault is security isolation. The configuration must be locked down so that only the background data ingestion layers can query it. Connecting unnecessary components to this database instantly breaks our security tiering tactic and compromises user credentials.
+\end{itemize}
+
+\subsubsection*{Relation to other architectural decisions}
+This database directly supports the polymorphic plugin layer (\nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}). Before a child plugin can initiate an external network handshake to download patient metrics, it must first check out the valid active token from this storage component. Conversely, it has zero relation to the primary hospital systems or standard sensor processing lines, keeping our security boundary clean.
+
+\subsubsection*{Trade-off justification}
+Splitting our data into two separate databases (\nameref{comp:ComponentseHealthPlatformPatientDataStorage} for data and \nameref{mod:ComponentsThirdPartyServiceTokenStorage} for credentials) naturally makes our architecture slightly more complex and means we have to manage multiple databases. However, this trade-off is absolutely necessary: it lets us apply heavy, compliant encryption and strict role-based access rules directly to the sensitive tokens without destroying the database access speeds required to read massive volumes of data.
+
+\subsubsection*{Considered alternatives}
+\paragraph{Alternative: Putting Everything into a Single Database.}
+We considered keeping things simple by storing third-party tokens and fitness tracker data side-by-side in the same database table under a single schema. While this would keep our system layout smaller and simplify data queries, we rejected it because it violates the principle of security tiering. Forcing our clinical analytics engine to continuously read from a table holding raw, decrypted authentication keys would create a massive security vulnerability and make compliance audits incredibly difficult.
+
+
+\subsection*{Architectural Decision 4:
+	HIS Manager}
+
+We placed a dedicatedabstraction, the \nameref{comp:ComponentseHealthPlatformHISManager}, between our platform and the external Hospital Information System (HIS). This component acts as an abstraction layer that handles all communication with the hospital's health API, translating our internal system requests into the data formats required by the specific hospital backend.
 
 \subsubsection*{Employed tactics and patterns}
 Database Abstraction layer
 
 \subsubsection*{Sensitivity points}
-This component handles requests to the his database and should do these in as few operations on the his as possible. The his could have sensitive patient data so it is also necessary to connect the His Manager with as few components as needed.
+\begin{itemize}
+	\item \textbf{API Request Overhead:} This component must be optimized to handle database operations on the HIS as efficiently as possible, utilizing batch requests or lightweight lookups.
+	\item \textbf{Data Minimization:} Because the HIS contains highly regulated and sensitive electronic health records (EHR), the HIS Manager must follow the principle of least privilege. It should expose only the minimal necessary endpoints to other internal components to prevent unauthorized internal data leakage.
+\end{itemize}
 
 \subsubsection*{Relation to other architectural decisions}
-The his manager provides abstraction to the his so that the patient gateway endpoint (as seen in \nameref{diag:Interaction:Incomingsensordata}), the clinical job creator and the risk estimator combiner does not have to make multiple health api calls and that in case of an API change in the his we only need to change one component.
+The HIS Manager provides a centralized data gateway for the patient gateway endpoint (as seen in \nameref{diag:Interaction:Incomingsensordata}), the clinical job creator, and the risk estimator combiner. They route their hospital data lookups exclusively through this manager instead of making scattered, direct health API calls. This fits with our goal of localized modifiability; if the hospital changes its underlying database schema or API protocol, this is the only component in our entire architecture that needs to be modified.
 
 \subsubsection*{Trade-off justification}
-Not including the HIS Manager would require some components to directly connect using the healthAPI, this would be a security issue as our healthAPI key or authentication method would be spread over the whole system. On top of that, it simplifies the transition to another hospital as only this component needs to be rewritten rather than every component using the healtAPI.
+Introducing an extra abstraction layer adds a small amount of initial code complexity and a tiny performance hit due to data translation at runtime. However, this trade-off is well worth it. Skipping the HIS Manager would force multiple internal components to manage their own authentication methods and direct connections to the health API. That would create a massive security risk by spreading our API credentials across the system and would make adapting our platform to a new hospital incredibly difficult.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Polymorphism.}
-Just like the third party api's we could implement a parent child structure where we have a common blueprint that is implemented for every hospital. As at the moment we only have one hospital we work with this would only complicate things and not contribute much. However if the pms needs to work with multiple hospital simultaneously this could be a good option.
+Just like we did for the third-party api's, we considered implementing a parent-child structure where a generic blueprint is inherited by specific subclasses for every hospital deployment. However, since our platform is currently integrated with only a single hospital, building an entire object-oriented polymorphic hierarchy right now would add unnecessary complexity without providing immediate value. If the system scales to support multiple hospitals simultaneously in the future, transitioning this component to a polymorphic blueprint will be straightforward because the data access logic is already safely isolated inside this single component.
+
 
 \noindent\rule{17cm}{0.3pt}
 
@@ -201,8 +209,10 @@ uitleg
 \subsubsection*{Sensitivity points}
 
 \subsubsection*{Relation to other architectural decisions}
+This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint (AD3)} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager (AD4)}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
 
 \subsubsection*{Trade-off justification}
+This architecture enforces a deliberate trade-off between \textbf{System Complexity} and \textbf{Performance Optimization/Modifiability}. Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters. However, this trade-off is highly justified within an extra-muros clinical care context; keeping the data ingress entirely stateless ensures that the system can scale seamlessly during mass enrollment phases, while the isolation of the alerting rules guarantees that safety reporting thresholds can be updated over time without requiring redeployments of the primary gateway endpoints.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Titel}
@@ -210,13 +220,40 @@ uitleg
 % ------------------------------------------------------------
 % (optional)
 \chapter{Other decisions}\label{sec:otherdecisions}
-A simple user-interface is needed on the app where the patient manually can enter his/her third party tokens. This makes it possible to extend the app in less than a month when the alternative would be to integrate the app with the third party services on the smartphone.
-\begin{enumerate}
-    \item Offloading detected communication failures to a dedicated \nameref{comp:ComponentseHealthPlatformAlertManager} component to handle notifications to stakeholders such as operators, telemedicine and telecommunication.
-\end{enumerate}
 
-% ------------------------------------------------------------
-\chapter{Discussion}\label{sec:discussion}
-% discussion impact extension on initial architecture (use cases...)
-% key trade offs architectural sensitivity points
-% how influence design decisions
+\subsubsection*{Manual Token-Entry User Interface on the Patient App}
+We decided to implement a minimal user interface directly on the patient app where users can manually input or paste their third-party service authentication tokens.
+\paragraph{Context and Justification:}
+Integrating a full, native SDK or OAuth redirection flow directly inside the smartphone application (e.g., launching in-app browsers, handling complex redirect deep-links, and managing tokens locally on the device) would significantly increase development time. By opting for a simple configuration screen where the patient inputs their generated token, we cleanly separate the mobile client from the third-party platforms. The app transmits this text string to our backend server, which handles the actual integration. This design choice guarantees that we can extend and deploy the app changes in less than 1 month.
+
+\subsubsection*{Notification Routing via the Alert Manager}
+When communication failures or system anomalies are detected, the system offloads the notifications to a dedicated component: the \nameref{comp:ComponentseHealthPlatformAlertManager}.
+
+\paragraph{Context and Justification:}
+To maintain high modifiability and adhere strictly to the Single Responsibility Principle, network detection components (like the cronjob) should not know how or who to notify when a failure occurs. Instead, once a failure state is declared, a structured exception event is handed off to the \nameref{comp:ComponentseHealthPlatformAlertManager}. This component resolves the alert. Centralizing this logic ensures that notification rules and thresholds can be modified or updated over time without requiring any redeployments or changes to our core endpoints.
+
+\subsection*{Architectural Infrastructure Decision: Patient and Operator Gateway Endpoints}
+
+We established centralized entry and exit points for all remote communication via the \nameref{comp:ComponentsPatientGatewayEndpoint} and an \nameref{comp:ComponentsOperatorGatewayEndpoint}. These components act as traffic controllers separating our core backend layers from external clients—specifically the patients' smartphone gateways and remote service operators (such as doctors, nurses, and maintenance engineers).
+
+\subsubsection*{Employed tactics and patterns}
+Gateway Pattern, Single Responsibility, Role-Based Access Control (RBAC).
+
+\subsubsection*{Sensitivity points}
+\begin{itemize}
+	\item \textbf{Strict Least-Privilege Routing:} These endpoints are highly sensitive security boundaries. They must only map to the exact internal components required to fulfill their specific role workflows. Allowing an endpoint to connect to an unnecessary backend service risks letting a user cross boundaries and access restricted health information.
+	\item \textbf{Single Point of Failure for Network Health:} Since all traffic flows through these points, any crash here completely cuts off backend visibility, making it a critical focus area for availability monitoring.
+\end{itemize}
+
+\subsubsection*{Relation to other architectural decisions}
+This centralized layout directly supports our availability routing logic for scenario Av2. When communication drops or a patient gateway goes offline, having a single communication gateway allows our auditing components (like the server-side cronjobs and alert managers) to track connection drops in one consolidated ledger rather than having to scan scattered application logs.
+
+\subsubsection*{Trade-off justification}
+By funneling all external incoming and outgoing traffic through dedicated gateway components, we introduce an extra network hop and a potential system bottleneck. However, this trade-off is completely justified: it drastically reduces code duplication for common network tasks (such as connection retries, timeout strategies, and fallback behaviors) and gives our security team an isolated, easy-to-audit boundary to safeguard incoming data.
+
+\subsubsection*{Considered alternatives}
+\paragraph{Alternative: Direct Component-to-User Communication.}
+We considered allowing every individual backend component to contact patient devices or operators directly whenever they had an update. We rejected this because it scatters communication logic across the entire system. If a network outage occurs, troubleshooting connectivity issues would become a nightmare, and implementing consistent security controls or global retry behavior would result in massive code duplication.
+
+\paragraph{Alternative: Task-Specific Communication Gateways.}
+Another option was to create multiple smaller gateways split by specific tasks (e.g., one for sensor data transfers, one for emergency alerts, and one for account settings). While this provides slightly better isolation, we rejected it because it splits our error-handling logic into too many places, making it harder to diagnose network failures quickly.
