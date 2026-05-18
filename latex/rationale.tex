@@ -27,7 +27,7 @@ To get  third party data into our system without breaking anything that already 
 \subsection*{Architectural Decision 1:
 ThirdPartyApi's}
 
-For contacting third party services we added the \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs} component. This serves as an abstract parent blueprin implemented by the googlefit and strava children. Working in this way allows new third party services to be implemented by implementing the blueprint component. This ensures that they can be added in less than \texttt{2 weeks}.
+For contacting third party services we added the \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs} component. This serves as an abstract parent blueprint implemented by the googlefit and strava children. Working in this way allows new third party services to be implemented by implementing the blueprint component. This ensures that they can be added in less than \texttt{2 weeks}.
 
 \subsubsection*{Employed tactics and patterns}
 Strategy Pattern and Polymorphism
