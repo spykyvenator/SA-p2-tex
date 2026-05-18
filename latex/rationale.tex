@@ -39,10 +39,10 @@ name of tactic2,
 name of tactic3
 
 \subsubsection*{Sensitivity points}
-Description of the sensitivity points.
+It is important that the timing for waiting for the next entry of patient data is set correctly every time with a well chosen margin, if the margin is too low we could get false positives and wrongly contact the communication channel operators or the patient.
 
 \subsubsection*{Relation to other architectural decisions}
-How this decision relates to other architectural decisions.
+A timer was needed to measure time between requests. Since the communication to the users happens in a special component for the user type it seemed fine to 
 
 \subsubsection*{Trade-off justification}
 Justification of the trade-offs.
