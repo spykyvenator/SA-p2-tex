@@ -42,7 +42,7 @@ Strategy Pattern and Polymorphism
 This blueprint relies directly on our decision to establish a local database layer (\nameref{comp:ComponentseHealthPlatformPatientDataStorage}). This allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
 \subsubsection*{Trade-off justification}
 This layout makes the system slightly larger and introduces some initial structural overhead because developers have to implement a parent-child structure rather than just writing a direct script. However, this trade-off is highly justified: we trade a small amount of extra upfront code complexity for long-term modifiability.
-This could also impact latency of the prediction process.
+Including the \nameref{comp:ComponentseHealthPlatformPatientDataStorage} also reduces latency of the prediction process because we don't always have to contact the third party servers.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Single component.}
@@ -142,7 +142,7 @@ In order to satisfy availability by handling fault-tolerance in the primary comm
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:  SyncManager and Buffer}
-To maintain operational continuity and detect communication failure on the app-side, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
+To maintain operational continuity and detect communication failure on the app-side, we introduced SyncManager and a buffer module, which represent a circular buffer, directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
 
 Instead of crashing or blocking the data-collection routines, the transaction exception is routed to the SyncManager. The SyncManager immediately transitions the gateway application into a local degraded mode.
 
@@ -160,7 +160,7 @@ Instead of crashing or blocking the data-collection routines, the transaction ex
 \end{enumerate}
 
 \subsubsection*{Relation to other architectural decisions}
-This decision establishes the foundation for the application's client-side resilience and connects directly to both the backend Cronjob (AD2) and the external SMS Gateway (AD3). When the SyncManager detects a network failure, it switches to degraded mode silently without attempting to send an offline alert to the server. Because of this quiet client-side handling, the backend must rely entirely on the Cronjob to notice that the gateway has stopped transmitting. During this downtime, the SyncManager is responsible for continuously evaluating incoming sensor data and pushing any emergency alerts to the SMS interface. Finally, when the network is restored, the SyncManager pushes its buffered data back to the Patient Gateway Endpoint. This automatically updates the backend's \texit{last seen} timestamps, allowing the Cronjob to clear the failure alert naturally without any manual resets from the telemedicine operators.
+This decision establishes the foundation for the application's client-side resilience and connects directly to both the backend Cronjob (AD2) and the external SMS Gateway (AD3). When the SyncManager detects a network failure, it switches to degraded mode silently without attempting to send an offline alert to the server. Because of this quiet client-side handling, the backend must rely entirely on the Cronjob to notice that the gateway has stopped transmitting. During this downtime, the SyncManager is responsible for continuously evaluating incoming sensor data and pushing any emergency alerts to the SMS interface. Finally, when the network is restored, the SyncManager pushes its buffered data back to the Patient Gateway Endpoint. This automatically updates the backend's \texttt{last seen} timestamps, allowing the Cronjob to clear the failure alert naturally without any manual resets from the telemedicine operators.
 
 
 \subsubsection*{Trade-off justification}
