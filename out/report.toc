@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
 \contentsline {chapter}{\numberline {2}QAS Decisions}{5}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}{5}{section.2.1}%
-\contentsline {paragraph}{Single component.}{6}{section*.9}%
+\contentsline {paragraph}{Single component.}{5}{section*.9}%
 \contentsline {paragraph}{Storing in the hospital information system (his).}{6}{section*.16}%
 \contentsline {paragraph}{no patient DataStorage}{6}{section*.17}%
 \contentsline {paragraph}{Alternative: Putting Everything into a Single Database.}{7}{section*.24}%
@@ -10,10 +10,10 @@
 \contentsline {section}{\numberline {2.2}Qual2: Communication between patient gateways and PMS backend (Av2)}{8}{section.2.2}%
 \contentsline {paragraph}{Availability over modifiability}{9}{section*.38}%
 \contentsline {paragraph}{Monitorability over performance}{9}{section*.39}%
-\contentsline {paragraph}{Prioritizing of clinical relevance over global data completeness}{9}{section*.40}%
-\contentsline {paragraph}{Drop new data instead of old data.}{10}{section*.42}%
+\contentsline {paragraph}{Availability over safety}{9}{section*.40}%
+\contentsline {paragraph}{Drop new data instead of old data.}{9}{section*.42}%
 \contentsline {paragraph}{Complexity and Performance}{10}{section*.48}%
-\contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{11}{section*.50}%
+\contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{10}{section*.50}%
 \contentsline {paragraph}{Open Wi-Fi / Mesh Network Hopping:}{11}{section*.57}%
 \contentsline {chapter}{\numberline {3}Other decisions}{12}{chapter.3}%
 \contentsline {paragraph}{Context and Justification:}{12}{section*.59}%
@@ -99,7 +99,7 @@
 \contentsline {subsection}{\numberline {E.3.30}PatientRecordMgmt}{52}{subsection.E.3.30}%
 \contentsline {subsection}{\numberline {E.3.31}ResetTimer}{52}{subsection.E.3.31}%
 \contentsline {subsection}{\numberline {E.3.32}Results}{52}{subsection.E.3.32}%
-\contentsline {subsection}{\numberline {E.3.33}SearchToken}{53}{subsection.E.3.33}%
+\contentsline {subsection}{\numberline {E.3.33}SearchToken}{52}{subsection.E.3.33}%
 \contentsline {subsection}{\numberline {E.3.34}SensorDataMgmt}{53}{subsection.E.3.34}%
 \contentsline {subsection}{\numberline {E.3.35}ShutDown}{53}{subsection.E.3.35}%
 \contentsline {subsection}{\numberline {E.3.36}SMSinterface}{53}{subsection.E.3.36}%
@@ -116,8 +116,8 @@
 \contentsline {subsection}{\numberline {E.4.4}MLaaS Conn (Pilot Deployment)}{55}{subsection.E.4.4}%
 \contentsline {subsection}{\numberline {E.4.5}MLaaS Service (Dev Deployment)}{55}{subsection.E.4.5}%
 \contentsline {subsection}{\numberline {E.4.6}MLaaS Service (Pilot Deployment)}{55}{subsection.E.4.6}%
-\contentsline {subsection}{\numberline {E.4.7}MLaaSCloud}{56}{subsection.E.4.7}%
-\contentsline {subsection}{\numberline {E.4.8}MLaaSConnectorNode}{56}{subsection.E.4.8}%
+\contentsline {subsection}{\numberline {E.4.7}MLaaSCloud}{55}{subsection.E.4.7}%
+\contentsline {subsection}{\numberline {E.4.8}MLaaSConnectorNode}{55}{subsection.E.4.8}%
 \contentsline {subsection}{\numberline {E.4.9}modelDB (Pilot Deployment)}{56}{subsection.E.4.9}%
 \contentsline {subsection}{\numberline {E.4.10}ModelStorage}{56}{subsection.E.4.10}%
 \contentsline {subsection}{\numberline {E.4.11}Patient Devices}{56}{subsection.E.4.11}%
@@ -127,9 +127,8 @@
 \contentsline {subsection}{\numberline {E.4.15}RiskEstimationMgmtNode}{56}{subsection.E.4.15}%
 \contentsline {subsection}{\numberline {E.4.16}RiskEstimationProcessorNode}{56}{subsection.E.4.16}%
 \contentsline {subsection}{\numberline {E.4.17}RiskEstimationProcessorNode (Dev Deployment)}{56}{subsection.E.4.17}%
-\contentsline {subsection}{\numberline {E.4.18}RiskEstimationProcessorNode (Pilot Deployment)}{57}{subsection.E.4.18}%
+\contentsline {subsection}{\numberline {E.4.18}RiskEstimationProcessorNode (Pilot Deployment)}{56}{subsection.E.4.18}%
 \contentsline {subsection}{\numberline {E.4.19}SMS Provider}{57}{subsection.E.4.19}%
-\contentsline {subsection}{\numberline {E.4.20}TODONode}{57}{subsection.E.4.20}%
 \contentsline {section}{\numberline {E.5}Exceptions}{57}{section.E.5}%
 \contentsline {section}{\numberline {E.6}Data types}{57}{section.E.6}%
-\contentsline {section}{\numberline {E.7}Unresolved issues}{63}{section.E.7}%
+\contentsline {section}{\numberline {E.7}Unresolved issues}{62}{section.E.7}%

@@ -42,7 +42,7 @@
 
 
 
-%%% Primary diagram of the client-server view (1289.0x694.5)
+%%% Primary diagram of the client-server view (1289.0x700.6074)
 
 \begin{figure}[!htp]
   \centering
@@ -96,7 +96,7 @@ Functionality that still has to be worked out in more detail is captured by the 
   \caption[Decomposition of the RiskEstimationProcessor]{\label{diag:Component:DecompositionoftheRiskEstimationProcessor}Decomposition of the RiskEstimationProcessor}
 \end{figure}
 
-%%% Patient Gateway App Component Diagram (1044.0x442.0)
+%%% Patient Gateway App Component Diagram (1044.0x443.0)
 
 \begin{figure}[!htp]
   \centering
@@ -202,18 +202,18 @@ Note that it is not correct to include this type of information in your primary 
 Note that, as this diagram depicts the internal flow between modules within the \vpett{\nameref{comp:ComponentseHealthPlatformRiskEstimationProcessor}}, the gray lifelines depict its (external) interfaces.}
 \end{figure}
 
-%%% MLModel Synchronization (1276.0x520.0)
+%%% MLModel Synchronization (1276.0x521.0)
 
 \begin{figure}[!htp]
   \centering
   \begin{tikzpicture}
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\maxwidth{\textwidth}]{InteractionDiagram-MLModel-Synchronization.pdf}};
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
-        \node [fit={(0.0980,1.0000) (0.2328,0.9308)},inner sep=0,hyperlink node={mod:ComponentseHealthPlatformMLModelManagerMLModelStorageManager}] {};
-\node [fit={(0.4099,1.0000) (0.5086,0.9308)},inner sep=0,hyperlink node={mod:ComponentseHealthPlatformMLModelManagerMLModelRepository}] {};
-\node [fit={(0.2555,1.0000) (0.3871,0.9308)},inner sep=0,hyperlink node={mod:ComponentseHealthPlatformMLModelManagerMLModelUpdateProcessor}] {};\node [fit={(0.0000,1.0000) (0.0862,0.9308)},inner sep=0,hyperlink node={int:InterfacesMLModelMgmt}] {};
-\node [fit={(0.9146,1.0000) (0.9992,0.9308)},inner sep=0,hyperlink node={int:InterfacesMLaaSService}] {};
-\node [fit={(0.7649,1.0000) (0.8229,0.9308)},inner sep=0,hyperlink node={int:InterfacesMLaaSAPI}] {};
+        \node [fit={(0.0980,1.0000) (0.2328,0.9309)},inner sep=0,hyperlink node={mod:ComponentseHealthPlatformMLModelManagerMLModelStorageManager}] {};
+\node [fit={(0.4099,1.0000) (0.5086,0.9309)},inner sep=0,hyperlink node={mod:ComponentseHealthPlatformMLModelManagerMLModelRepository}] {};
+\node [fit={(0.2555,1.0000) (0.3871,0.9309)},inner sep=0,hyperlink node={mod:ComponentseHealthPlatformMLModelManagerMLModelUpdateProcessor}] {};\node [fit={(0.0000,1.0000) (0.0862,0.9309)},inner sep=0,hyperlink node={int:InterfacesMLModelMgmt}] {};
+\node [fit={(0.9146,1.0000) (0.9992,0.9309)},inner sep=0,hyperlink node={int:InterfacesMLaaSService}] {};
+\node [fit={(0.7649,1.0000) (0.8229,0.9309)},inner sep=0,hyperlink node={int:InterfacesMLaaSAPI}] {};
     \end{scope}
     \end{tikzpicture}
   \caption[MLModel Synchronization]{\label{diag:Interaction:MLModelSynchronization}MLModel Synchronization\\As the system operations new \ref{data:DatatypesMLModel}s may become available for use by the \ref{data:DatatypesClinicalModel}s. This diagram illustrates the synchronization logic to fetch any unavailable \ref{data:DatatypesMLModel}s and to store a local copy of the \ref{data:DatatypesMLModel}s in the \vpett{\nameref{mod:ComponentseHealthPlatformMLModelManagerMLModelRepository}} for faster retrieval and use in the sensor data risk assessment.
@@ -300,17 +300,17 @@ Note that, as this diagram depicts the internal flow between modules within the 
   \caption[Update gateway push wait time]{\label{diag:Interaction:Updategatewaypushwaittime}Update gateway push wait time\\A sequence diagram showing how the doctor can update how long a gateway should wait for sending newly available sensor data}
 \end{figure}
 
-%%% av2: Communication channel between PMS and PG goes down: Detection by time-out (Back-end) (1514.0x1009.0; rotated)
+%%% av2: Communication channel between PMS and PG goes down: Detection by time-out (Back-end) (1514.0x1010.0; rotated)
 \begin{landscape}
 \begin{figure}[!htp]
   \centering
   \begin{tikzpicture}
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\maxwidth{\txtheight}]{InteractionDiagram-av2-Communication-channel-between-PMS-and-PG-goes-down-Detection-by-time-out-Back-end-.pdf}};
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
-        \node [fit={(0.0760,0.7998) (0.1532,0.7502)},inner sep=0,hyperlink node={diag:Interaction:Incomingsensordata}] {};\node [fit={(0.2173,1.0000) (0.4036,0.9643)},inner sep=0,hyperlink node={comp:ComponentsPatientGatewayEndpoint}] {};
-\node [fit={(0.8197,1.0000) (1.0178,0.9643)},inner sep=0,hyperlink node={comp:ComponentsOperatorGatewayEndpoint}] {};
-\node [fit={(0.4663,1.0000) (0.5793,0.9643)},inner sep=0,hyperlink node={comp:ComponentseHealthPlatformAlertManager}] {};
-\node [fit={(0.0271,1.0000) (0.0997,0.9643)},inner sep=0,hyperlink node={comp:ComponentseHealthPlatformCronjob}] {};\node [fit={(0.6631,1.0000) (0.7933,0.9643)},inner sep=0,hyperlink node={int:InterfacesOtherDataMgmt}] {};
+        \node [fit={(0.0760,0.8000) (0.1532,0.7505)},inner sep=0,hyperlink node={diag:Interaction:Incomingsensordata}] {};\node [fit={(0.2173,1.0000) (0.4036,0.9644)},inner sep=0,hyperlink node={comp:ComponentsPatientGatewayEndpoint}] {};
+\node [fit={(0.8197,1.0000) (1.0178,0.9644)},inner sep=0,hyperlink node={comp:ComponentsOperatorGatewayEndpoint}] {};
+\node [fit={(0.4663,1.0000) (0.5793,0.9644)},inner sep=0,hyperlink node={comp:ComponentseHealthPlatformAlertManager}] {};
+\node [fit={(0.0271,1.0000) (0.0997,0.9644)},inner sep=0,hyperlink node={comp:ComponentseHealthPlatformCronjob}] {};\node [fit={(0.6631,1.0000) (0.7933,0.9644)},inner sep=0,hyperlink node={int:InterfacesOtherDataMgmt}] {};
     \end{scope}
     \end{tikzpicture}
   \caption[av2: Communication channel between PMS and PG goes down: Detection by time-out (Back-end)]{\label{diag:Interaction:av2CommunicationchannelbetweenPMSandPGgoesdownDetectionbytimeoutBackend}av2: Communication channel between PMS and PG goes down: Detection by time-out (Back-end)}
@@ -351,17 +351,17 @@ Note that, as this diagram depicts the internal flow between modules within the 
   \caption[Incoming sensor data]{\label{diag:Interaction:Incomingsensordata}Incoming sensor data}
 \end{figure}
 \end{landscape}
-%%% Patient gateway fails (1393.0x782.0)
+%%% Patient gateway fails (1393.22x782.0)
 
 \begin{figure}[!htp]
   \centering
   \begin{tikzpicture}
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\maxwidth{\textwidth}]{InteractionDiagram-Patient-gateway-fails.pdf}};
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
-        \node [fit={(0.3252,0.4693) (0.4472,0.3990)},inner sep=0,hyperlink node={diag:Interaction:Exitdegradedmode}] {};
-\node [fit={(0.3216,0.6151) (0.4480,0.5512)},inner sep=0,hyperlink node={diag:Interaction:DegradedMode}] {};\node [fit={(0.7789,1.0000) (0.9986,0.9540)},inner sep=0,hyperlink node={comp:ComponentsOperatorGatewayEndpoint}] {};
-\node [fit={(0.6411,1.0000) (0.7617,0.9540)},inner sep=0,hyperlink node={comp:ComponentseHealthPlatformAlertManager}] {};
-\node [fit={(0.4164,1.0000) (0.6246,0.9540)},inner sep=0,hyperlink node={comp:ComponentsPatientGatewayEndpoint}] {};
+        \node [fit={(0.3251,0.4693) (0.4472,0.3990)},inner sep=0,hyperlink node={diag:Interaction:Exitdegradedmode}] {};
+\node [fit={(0.3216,0.6151) (0.4479,0.5512)},inner sep=0,hyperlink node={diag:Interaction:DegradedMode}] {};\node [fit={(0.7788,1.0000) (0.9984,0.9540)},inner sep=0,hyperlink node={comp:ComponentsOperatorGatewayEndpoint}] {};
+\node [fit={(0.6410,1.0000) (0.7615,0.9540)},inner sep=0,hyperlink node={comp:ComponentseHealthPlatformAlertManager}] {};
+\node [fit={(0.4163,1.0000) (0.6245,0.9540)},inner sep=0,hyperlink node={comp:ComponentsPatientGatewayEndpoint}] {};
 \node [fit={(0.2304,1.0000) (0.3984,0.9540)},inner sep=0,hyperlink node={comp:ComponentsPatientGatewayApp}] {};
 \node [fit={(0.1134,1.0000) (0.2139,0.9540)},inner sep=0,hyperlink node={comp:ComponentsMobileOS}] {};
     \end{scope}
@@ -369,16 +369,16 @@ Note that, as this diagram depicts the internal flow between modules within the 
   \caption[Patient gateway fails]{\label{diag:Interaction:Patientgatewayfails}Patient gateway fails}
 \end{figure}
 
-%%% Degraded Mode (894.0x384.0)
+%%% Degraded Mode (894.0x385.0)
 
 \begin{figure}[!htp]
   \centering
   \begin{tikzpicture}
     \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[width=\maxwidth{\textwidth}]{InteractionDiagram-Degraded-Mode.pdf}};
     \begin{scope}[x={(image.south east)},y={(image.north west)}]
-        \node [fit={(0.6454,0.8958) (0.7427,0.8021)},inner sep=0,hyperlink node={mod:ComponentsPatientGatewayAppBuffer}] {};
-\node [fit={(0.2763,0.8958) (0.4597,0.8021)},inner sep=0,hyperlink node={mod:ComponentsPatientGatewayAppSyncManager}] {};
-\node [fit={(0.0179,0.8958) (0.1980,0.8021)},inner sep=0,hyperlink node={mod:ComponentsPatientGatewayAppAppEndpoint}] {};
+        \node [fit={(0.6454,0.8961) (0.7427,0.8026)},inner sep=0,hyperlink node={mod:ComponentsPatientGatewayAppBuffer}] {};
+\node [fit={(0.2763,0.8961) (0.4597,0.8026)},inner sep=0,hyperlink node={mod:ComponentsPatientGatewayAppSyncManager}] {};
+\node [fit={(0.0179,0.8961) (0.1980,0.8026)},inner sep=0,hyperlink node={mod:ComponentsPatientGatewayAppAppEndpoint}] {};
     \end{scope}
     \end{tikzpicture}
   \caption[Degraded Mode]{\label{diag:Interaction:DegradedMode}Degraded Mode}

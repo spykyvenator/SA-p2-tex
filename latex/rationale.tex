@@ -132,6 +132,7 @@ Just like we did for the third-party api's, we considered implementing a parent-
 \noindent\rule{17cm}{0.3pt}
 
 \section{Qual2: Communication between patient gateways and PMS backend (Av2)}
+In order to satisfy availability by handling fault-tolerance in the primary communication channel, we made the following architectural decisions:
 \subsection*{Key Decisions}
 \begin{adlist}
 	\item Implementation of \nameref{mod:ComponentsPatientGatewayAppSyncManager} and a \nameref{mod:ComponentsPatientGatewayAppBuffer} module on the \nameref{comp:ComponentsPatientGatewayApp} to handle a continuous 24-hour network failure gracefully.
@@ -141,7 +142,7 @@ Just like we did for the third-party api's, we considered implementing a parent-
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:  SyncManager and Buffer}
-To maintain operational continuity, we introduced SyncManager and a Buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor and state controller for all outbound data transmissions.
+To maintain operational continuity, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
 
 Instead of crashing or blocking the data-collection routines, the transaction exception is routed to the SyncManager. The SyncManager immediately transitions the gateway application into a local degraded mode.
 
@@ -149,7 +150,6 @@ Instead of crashing or blocking the data-collection routines, the transaction ex
 \begin{itemize}
 	\item By utilizing exponential back-off, we prevent device battery depletion and backend server storming during network reconnection phases.
 	\item The buffer has a capacity for 24 hours of sensor data at the configured transmission rate. When the buffer is full, the oldest entry is overwritten by the newest. Only the timestamp of the overwritten packet is logged prior to overwriting, preserving auditability without requiring retention of the full sensor payload. This policy prioritizes recency over completeness, since the most recent sensor data is most clinically relevant for risk estimation when the connection is restored. The data loss for outages exceeding 24 hours is considered acceptable given the Av2 requirement explicitly limits the storage guarantee to 24 hours.
-	\item \textbf{State Pattern:} The SyncManager acts as the \textit{Context} object, while NormalModeState and DegradedModeState represent the \textit{Concrete States}. The application’s data-routing behavior changes dynamically based on its internal connection state wrapper, encapsulating the complex synchronization logic away from the data collection subcomponents.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
@@ -160,17 +160,16 @@ Instead of crashing or blocking the data-collection routines, the transaction ex
 \end{enumerate}
 
 \subsubsection*{Relation to other architectural decisions}
-This decision establishes the foundation for the application's client-side resilience and connects directly to both the backend Cronjob (AD2) and the external SMS Gateway (AD3). When the SyncManager detects a network failure, it switches to degraded mode silently without attempting to send an offline alert to the server. Because of this quiet client-side handling, the backend must rely entirely on the Cronjob to notice that the gateway has stopped transmitting. During this downtime, the SyncManager acts as the brain for our emergency fallback. It continuously evaluates incoming sensor data and is directly responsible for pushing any life-threatening health alerts to the SMS interface. Finally, when the network is restored, the SyncManager pushes its buffered data back to the Patient Gateway Endpoint. This automatically updates the backend's "last seen" timestamps, allowing the Cronjob to clear the failure alert naturally without any manual resets from the telemedicine operators.
+This decision establishes the foundation for the application's client-side resilience and connects directly to both the backend Cronjob (AD2) and the external SMS Gateway (AD3). When the SyncManager detects a network failure, it switches to degraded mode silently without attempting to send an offline alert to the server. Because of this quiet client-side handling, the backend must rely entirely on the Cronjob to notice that the gateway has stopped transmitting. During this downtime, the SyncManager is responsible for continuously evaluating incoming sensor data and pushing any emergency alerts to the SMS interface. Finally, when the network is restored, the SyncManager pushes its buffered data back to the Patient Gateway Endpoint. This automatically updates the backend's \texit{last seen} timestamps, allowing the Cronjob to clear the failure alert naturally without any manual resets from the telemedicine operators.
 
 
 \subsubsection*{Trade-off justification}
 \paragraph{Availability over modifiability}
-To achieve higher availability and fault-tolerance, the SyncManager and buffer introduce complexityt of the gateway app. It creates tighter coupling between data acquisition modules and transport layers, which ultimately reduces the system's long-term modifiability.
+To achieve higher availability and fault-tolerance, the SyncManager and buffer introduce complexity of the gateway app. It creates tighter coupling between data acquisition modules and transport layers, which ultimately reduces the system's long-term modifiability.
 \paragraph{Monitorability over performance}
 To satisy the autonomous failure detection, the backend must execute continous checks on liveness states of the gateways. This might introduce a steady performance cost in terms of CPU cycles, database query load, and resource consumption on the backend server.
-\paragraph{Prioritizing of clinical relevance over global data completeness}
+\paragraph{Availability over safety}
 We acknowledge full data recovery cannot be met when patiens phone dies, and therefor focus on prevention and proper report of lost timeslot of data.
-Also, because the buffer space is limited, we made the decision to overwrite old data by assumption the most recent sensor reading contains the highest critical utility for the clinical model's immediate risk estimation calculations when connectivity returns.
 The trade-off is completely acceptable because it strictly honors the 24-hour retention mandate while protecting device performance boundaries.
 
 \subsubsection*{Considered alternatives}
