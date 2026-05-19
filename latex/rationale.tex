@@ -15,13 +15,13 @@ To accomplish this we zoom in on the prediction pipeline and the communication c
 \subsection*{Key Decisions}
 To get  third party data into our system without breaking anything that already works or slowing down our main prediction engine, we made the following four key architectural decisions:
 \begin{adlist}
-	\item \textbf{Third-Party API Blueprint:} We introduced an abstract parent component called \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}. This acts as a reusable blueprint that child components (like \texttt{StravaAPI} and \texttt{GoogleFitAPI}) implement. It hides all the API details from the rest of our app.
+	\item  We introduced an abstract parent component called \nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}. This acts as a reusable blueprint that child components (like \texttt{StravaAPI} and \texttt{GoogleFitAPI}) implement. It hides all the API details from the rest of our app.
 
-	\item \textbf{Third party storage} We included a \nameref{comp:ComponentseHealthPlatformPatientDataStorage} in the pms specifically for storing third party patient data.
+	\item  We included a \nameref{comp:ComponentseHealthPlatformPatientDataStorage} in the pms specifically for storing third party patient data.
 
-	\item \textbf{Token Storage} We included a seperate storage \nameref{mod:ComponentsThirdPartyServiceTokenStorage} for sensitive tokens.
+	\item We included a seperate storage \nameref{mod:ComponentsThirdPartyServiceTokenStorage} for sensitive tokens.
 
-  \item \textbf{HIS Manager} We placed a component, \nameref{comp:ComponentseHealthPlatformHISManager}, between our platform and the hospital information system.
+  \item  We placed a component, \nameref{comp:ComponentseHealthPlatformHISManager}, between our platform and the hospital information system.
 \end{adlist}
 
 \subsection*{Architectural Decision 1:
@@ -40,8 +40,6 @@ Strategy Pattern and Polymorphism
 
 \subsubsection*{Relation to other architectural decisions}
 This blueprint relies directly on our decision to establish a local database layer (\nameref{comp:ComponentseHealthPlatformPatientDataStorage}). This allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
-some changes
-
 \subsubsection*{Trade-off justification}
 This layout makes the system slightly larger and introduces some initial structural overhead because developers have to implement a parent-child structure rather than just writing a direct script. However, this trade-off is highly justified: we trade a small amount of extra upfront code complexity for long-term modifiability.
 This could also impact latency of the prediction process.
