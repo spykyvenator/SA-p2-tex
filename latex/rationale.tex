@@ -42,7 +42,7 @@ Strategy Pattern and Polymorphism
 This blueprint relies directly on our decision to establish a local database layer (\nameref{comp:ComponentseHealthPlatformPatientDataStorage}). This allows us to check if we already got earlier data from the third party which we can use rather than fetching the same data again.
 \subsubsection*{Trade-off justification}
 This layout makes the system slightly larger and introduces some initial structural overhead because developers have to implement a parent-child structure rather than just writing a direct script. However, this trade-off is highly justified: we trade a small amount of extra upfront code complexity for long-term modifiability.
-Including the \nameref{comp:ComponentseHealthPlatformPatientDataStorage} also reduces latency of the prediction process because we don't always have to contact the third party servers.
+This could impact latency of the prediction process which is why, as explained in the next section we included the \nameref{comp:ComponentseHealthPlatformPatientDataStorage}.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Single component.}
@@ -67,7 +67,7 @@ Single responsiblity and Data Caching
 
 
 \subsubsection*{Relation to other architectural decisions}
-This decision works hand-in-hand with the abstract plugin blueprints (\nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}]). The concrete child integration plugins handle the external API polling logic and continuously push fresh data packages directly into this storage component. the clinical job creator checks the recentness of the available rows in this cache databas. It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}.
+This decision works hand-in-hand with the abstract plugin blueprints (\nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}). The concrete child integration plugins handle the external API polling logic and continuously push fresh data packages directly into this storage component. the clinical job creator checks the recentness of the available rows in this cache databas. It can then, depending on the recentness of the available data poll for new data from the ThirdPartyApi as seen in \nameref{diag:Interaction:Thirdpartypolling}.
 If the patient is not using a third party service or when the third party service or patient database is unavailable, the clinical job creator will continue without the third party data.
 
 \subsubsection*{Trade-off justification}
@@ -78,7 +78,7 @@ By adding a dedicated local storage layer, we introduce extra data management ov
 This would be the best option if we could edit the his to store this data as it moves the security responsibility to the hospital, however it is not possible as we cannot control what can be stored in the his as it depends on the serviced hospital.
 
 \paragraph{no patient DataStorage}
-It would be possible to implement this without a patient datastorage, this would mean that on every prediction job we have to fetch all the patient data from the third party services. However adding the datastorage offloads work of the third parties, it reduces latency and with a implementation deadline of 3 months we should have more than enough time to implement this extension.
+It would be possible to implement this without a patient datastorage, this would mean that on every prediction job we have to fetch all the patient data from the third party services. However adding the datastorage offloads work off the third parties, it reduces latency and with a implementation deadline of 3 months we should have more than enough time to implement this extension.
 
 \subsection*{Architectural Decision 3: Token Storage}
 
@@ -97,7 +97,7 @@ Information Encapsulation, Security Tiering
 This database directly supports the polymorphic plugin layer (\nameref{mod:ComponentsThirdPartyServiceThirdPartyAPIs}). Before a child plugin can initiate an external network handshake to download patient metrics, it must first check out the valid active token from this storage component. Conversely, it has zero relation to the primary hospital systems or standard sensor processing lines, keeping our security boundary clean.
 
 \subsubsection*{Trade-off justification}
-Splitting our data into two separate databases (\nameref{comp:ComponentseHealthPlatformPatientDataStorage} for data and \nameref{mod:ComponentsThirdPartyServiceTokenStorage} for credentials) naturally makes our architecture slightly more complex and means we have to manage multiple databases. However, this trade-off is absolutely necessary: it lets us apply heavy, compliant encryption and strict role-based access rules directly to the sensitive tokens without destroying the database access speeds required to read massive volumes of data.
+Splitting our data into two separate databases (\nameref{comp:ComponentseHealthPlatformPatientDataStorage} for data and \nameref{mod:ComponentsThirdPartyServiceTokenStorage} for credentials) naturally makes our architecture slightly more complex and means we have to manage multiple databases. However, this trade-off is more than worth it: it lets us apply heavy, compliant encryption and strict role-based access rules directly to the sensitive tokens without destroying the database access speeds required to read massive volumes of data.
 
 \subsubsection*{Considered alternatives}
 \paragraph{Alternative: Putting Everything into a Single Database.}
@@ -107,7 +107,7 @@ We considered keeping things simple by storing third-party tokens and fitness tr
 \subsection*{Architectural Decision 4:
 	HIS Manager}
 
-We placed a dedicatedabstraction, the \nameref{comp:ComponentseHealthPlatformHISManager}, between our platform and the external Hospital Information System (HIS). This component acts as an abstraction layer that handles all communication with the hospital's health API, translating our internal system requests into the data formats required by the specific hospital backend.
+We placed a dedicated abstraction, the \nameref{comp:ComponentseHealthPlatformHISManager}, between our platform and the external Hospital Information System (HIS). This component acts as an abstraction layer that handles all communication with the hospital's health API, translating our internal system requests into the data formats required by the specific hospital backend.
 
 \subsubsection*{Employed tactics and patterns}
 Database Abstraction layer
@@ -142,7 +142,7 @@ In order to satisfy availability by handling fault-tolerance in the primary comm
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:  SyncManager and Buffer}
-To maintain operational continuity and detect communication failure on the app-side, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
+To maintain operational continuity, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
 
 Instead of crashing or blocking the data-collection routines, the transaction exception is routed to the SyncManager. The SyncManager immediately transitions the gateway application into a local degraded mode.
 
@@ -187,7 +187,6 @@ By calculating the delta between the current system clock and the expected data-
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
 	\item Utilizing existing, periodic scheduled payloads as connection validation (implicit heartbeats), optimizing client-side battery life and conserving restricted cellular bandwidth.
-	\item The \hyperref[diag:Interaction:av2CommunicationchannelbetweenPMSandPGgoesdownDetectionbytimeoutBackend]{AlertManager} applies differentiated service levels by routing alerts through the AlertPush interface without queuing or batching, ensuring notification latency is bounded by detection time alone rather than queue depth. High-risk alerts are dispatched first, satisfying the 2/5/10-minute delivery windows by risk class.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
