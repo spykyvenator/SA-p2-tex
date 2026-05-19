@@ -155,7 +155,6 @@ Instead of crashing or blocking the data-collection routines, the transaction ex
 \subsubsection*{Sensitivity points}
 \begin{enumerate}
 	\item The availability of cardiovascular data during a prolonged outage is highly sensitive to mobile storage limits. Because our degraded mode relies entirely on the smartphone's local memory to buffer up to 24 hours of sensor data, allocating a buffer size that is too small will result in the oldest data being permanently overwritten and lost before the network is restored.
-	\item While SyncManager is responsible for entering degrading mode and enforcing notifications of emergency notifs, we cannot make sure the SMS gateway is contacted when the patients phone has died.
 	\item System performance and the throughput guarantees established in P2 are directly sensitive to the reconnection sync rate. When the network is finally restored and the SyncManager flushes its buffered data to the backend, an overly aggressive sync rate without proper batch sizing and backoff intervals could cause a fleet of reconnecting gateways to flood the backend, instantly forcing the RiskEstimationScheduler into overload mode.
 \end{enumerate}
 
@@ -171,6 +170,9 @@ To satisy the autonomous failure detection, the backend must execute continous c
 \paragraph{Availability over safety}
 We acknowledge full data recovery cannot be met when patiens phone dies, and therefor focus on prevention and proper report of lost timeslot of data.
 The trade-off is completely acceptable because it strictly honors the 24-hour retention mandate while protecting device performance boundaries.
+\paragraph{Network availability over hardware reliability}
+By placing the SyncManager and the SMS emergency fallback directly on the patient's smartphone, we make the system highly resilient to internet outages. However, this introduces a strict hardware trade-off: the architecture now assumes the mobile device will always have battery power. If a patient's phone dies completely, the app cannot trigger the SMS gateway, meaning no emergency alerts will be sent from the client side during a crisis. We accept this hardware risk in exchange for excellent network availability, knowing that our backend Cronjob acts as the ultimate safety net to eventually detect the dead device.
+
 
 \subsubsection*{Considered alternatives}
 \paragraph{Drop new data instead of old data.}
