@@ -186,21 +186,22 @@ By calculating the delta between the current system clock and the expected data-
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
-	\item \textit{Implicit Heartbeat:} Leveraging existing, periodic scheduled payloads as connection validation, optimizing client-side battery life and conserving restricted cellular bandwidth.
+	\item Utilizing existing, periodic scheduled payloads as connection validation (implicit heartbeats), optimizing client-side battery life and conserving restricted cellular bandwidth.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
 \begin{itemize}
 	\item The scalability of this liveness tracking mechanism is highly sensitive to whether the execution is single-threaded or concurrent. While auditing a few hundred pilot patients is trivial, scaling to thousands of patients with a single-threaded loop will cause the execution time to grow, eventually causing the system's detection latency to drift past the required 5-minute deadline.
-	\item The detection latency required by the Av2 scenario is entirely sensitive to the polling frequency and timeout threshold of the backend Cronjob. If this tracking loop runs too infrequently, the system will fail to detect missing transmissions within the strict "expected time + 5 minutes" deadline, while running it too frequently will needlessly burn backend CPU resources.
+	\item The detection latency required by the Av2 scenario is entirely sensitive to the polling frequency and timeout threshold of the backend Cronjob. If this tracking loop runs too infrequently, the system will fail to detect missing transmissions within the strict \textit{expected time + 5 minutes} deadline, while running it too frequently will needlessly burn backend CPU resources.
 \end{itemize}
 
 \subsubsection*{Relation to other architectural decisions}
-This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager}. When an offline gateway restores its link and flushes its \texttt{LocalBuffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the subsequent \texttt{Cronjob} execution cycle to self-heal the client's connectivity flag automatically, preventing the generation of redundant failure alerts and protecting telemedicine operators from operational alert fatigue.
+This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager}. When an offline gateway restores its link and flushes its \texttt{buffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the \texttt{Cronjob} execution cycle to reset the client's connectivity flag automatically.
 
 \subsubsection*{Trade-off justification}
-\paragraph{Complexity and Performance}
+\paragraph{Availability over performance}
 Introducing a multi-tiered pipeline (\texttt{Cronjob}, \texttt{Endpoint Ledger}, \texttt{AlertManager}) requires a higher structural overhead and more internal interface specifications than simply embedding connection timeouts inside the active network adapters.
+
 \subsubsection*{Considered alternatives}
 \paragraph{Active Peer-to-Peer Polling from Backend to Client.}
 An alternative approach considered was forcing the backend servers to actively broadcast periodic application-layer ping queries to every registered smartphone gateway at 60-second intervals to verify connection health. This alternative was rejected because active background radio polling rapidly drains the edge device's battery, violating the core user experience constraint of low physical invasiveness in the patient's day-to-day life, and scales poorly due to the compounding financial and bandwidth costs of continuous cell-tower polling.
@@ -228,23 +229,23 @@ This decision relies directly on the SyncManager (AD1) to act as the trigger mec
 
 \subsubsection*{Considered alternatives}
 \paragraph{Open Wi-Fi / Mesh Network Hopping:}
-We considered programming the gateway app to aggressively scan for and connect to nearby open Wi-Fi networks or use Bluetooth mesh networking to find an alternate route to the internet. This was rejected due to severe security and privacy vulnerabilities—transmitting unencrypted health data over unverified public networks violates GDPR constraints. Additionally, continuous radio scanning would rapidly deplete the device's remaining battery, worsening the availability problem.
+We considered programming the gateway app to aggressively scan for and connect to nearby open Wi-Fi networks or use Bluetooth mesh networking to find an alternate route to the internet. This was rejected due to severe security and privacy vulnerabilities. Additionally, continuous radio scanning would rapidly deplete the device's remaining battery, worsening the availability problem.
 % ------------------------------------------------------------
 % (optional)
 \chapter{Other decisions}\label{sec:otherdecisions}
 
-\subsection*{Manual Token-Entry User Interface on the Patient App}
+\subsection*{1. Manual Token-Entry User Interface on the Patient App}
 We decided to implement a minimal user interface directly on the patient app where users can manually input or paste their third-party service authentication tokens.
 \paragraph{Context and Justification:}
 Integrating a full, native SDK or OAuth redirection flow directly inside the smartphone application (e.g., launching in-app browsers, handling complex redirect deep-links, and managing tokens locally on the device) would significantly increase development time. By opting for a simple configuration screen where the patient inputs their generated token, we cleanly separate the mobile client from the third-party platforms. The app transmits this text string to our backend server, which handles the actual integration. This design choice guarantees that we can extend and deploy the app changes in less than 1 month.
 
-\subsection*{Notification Routing via the Alert Manager}
+\subsection*{2. Notification Routing via the Alert Manager}
 When communication failures or system anomalies are detected, the system offloads the notifications to a dedicated component: the \nameref{comp:ComponentseHealthPlatformAlertManager}.
 
 \paragraph{Context and Justification:}
 To maintain high modifiability and adhere strictly to the Single Responsibility Principle, network detection components (like the cronjob) should not know how or who to notify when a failure occurs. Instead, once a failure state is declared, a structured exception event is handed off to the \nameref{comp:ComponentseHealthPlatformAlertManager}. This component resolves the alert. Centralizing this logic ensures that notification rules and thresholds can be modified or updated over time without requiring any redeployments or changes to our core endpoints.
 
-\subsection*{Architectural Infrastructure Decision: Patient and Operator Gateway Endpoints}
+\subsection*{3.. Architectural Infrastructure Decision: Patient and Operator Gateway Endpoints}
 
 We established centralized entry and exit points for all remote communication via the \nameref{comp:ComponentsPatientGatewayEndpoint} and an \nameref{comp:ComponentsOperatorGatewayEndpoint}. These components act as traffic controllers separating our core backend layers from external clients—specifically the patients' smartphone gateways and remote service operators (such as doctors, nurses, and maintenance engineers).
 

@@ -12,7 +12,7 @@
 \contentsline {paragraph}{Monitorability over performance}{9}{section*.39}%
 \contentsline {paragraph}{Availability over safety}{9}{section*.40}%
 \contentsline {paragraph}{Drop new data instead of old data.}{9}{section*.42}%
-\contentsline {paragraph}{Complexity and Performance}{10}{section*.48}%
+\contentsline {paragraph}{Availability over performance}{10}{section*.48}%
 \contentsline {paragraph}{Active Peer-to-Peer Polling from Backend to Client.}{10}{section*.50}%
 \contentsline {paragraph}{Open Wi-Fi / Mesh Network Hopping:}{11}{section*.57}%
 \contentsline {chapter}{\numberline {3}Other decisions}{12}{chapter.3}%
