@@ -200,7 +200,7 @@ Thus the Cronjob can autonomously flag communication problems without introducin
 \end{itemize}
 
 \subsubsection*{Relation to other architectural decisions}
-This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager}. When an offline gateway restores its link and flushes its \texttt{buffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the \texttt{Cronjob} execution cycle to reset the client's connectivity flag automatically.
+This decision establishes a structural dependency on the data contract provided by the \texttt{Patient Gateway Endpoint} and coordinates directly with the downstream routing interfaces of the \texttt{AlertManager}. When an offline gateway restores its link and flushes its \texttt{buffer} using an exponential back-off chunking strategy, the endpoint's timestamp index is updated transparently. This allows the \texttt{Cronjob} execution cycle to reset the client's connectivity flag automatically (\nameref{diag:Interaction:Incomingsensordata}).
 
 \subsubsection*{Trade-off justification}
 \paragraph{Availability over performance}
