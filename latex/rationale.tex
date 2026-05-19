@@ -11,7 +11,7 @@ To accomplish this we zoom in on the prediction pipeline and the communication c
 
 
 
-\section{Qual1: Include third party lifestyle tracker dat in clinical model computations (M1)}
+\section{Qual1: Include third party lifestyle tracker data in clinical model computations (M1)}
 \subsection*{Key Decisions}
 To get  third party data into our system without breaking anything that already works or slowing down our main prediction engine, we made the following four key architectural decisions:
 \begin{adlist}
@@ -142,7 +142,7 @@ In order to satisfy availability by handling fault-tolerance in the primary comm
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:  SyncManager and Buffer}
-To maintain operational continuity, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
+To maintain operational continuity and detect communication failure on the app-side, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
 
 Instead of crashing or blocking the data-collection routines, the transaction exception is routed to the SyncManager. The SyncManager immediately transitions the gateway application into a local degraded mode.
 
@@ -187,6 +187,7 @@ By calculating the delta between the current system clock and the expected data-
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
 	\item Utilizing existing, periodic scheduled payloads as connection validation (implicit heartbeats), optimizing client-side battery life and conserving restricted cellular bandwidth.
+	\item The \hyperref[diag:Interaction:av2CommunicationchannelbetweenPMSandPGgoesdownDetectionbytimeoutBackend]{AlertManager} applies differentiated service levels by routing alerts through the AlertPush interface without queuing or batching, ensuring notification latency is bounded by detection time alone rather than queue depth. High-risk alerts are dispatched first, satisfying the 2/5/10-minute delivery windows by risk class.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
