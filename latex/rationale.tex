@@ -178,16 +178,19 @@ During the design of the local buffer, we considered an alternative capacity man
 
 
 % ------------------------------------------------------------
-\subsection*{Architectural Decision 2: Adding the cronjob component}
+\subsection*{Architectural Decision 2: Adding the Cronjob component}
 
-The integration of a decoupled, server-side \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} component addresses the fundamental architectural challenge of isolating incoming data stream logic from orchestration and health-monitoring overhead. The \texttt{Cronjob} operates as an independent background daemon, which keeps a countdown for every patient's data.
+Since the SyncManager handles client-side failure detection, the backend has no direct signal that a gateway has gone offline. To ensure availability is monitored end-to-end, a dedicated server-side detection mechanism is required. The \hyperref[diag:Component:Primarydiagramoftheclientserverview]{\texttt{Cronjob}} fills this role by maintaining a per-patient record of the expected transmission interval \texttt{T}, derived from the sensor push timing configured for that patient.
 
-By calculating the delta between the current system clock and the expected data-arrival interval of each active patient profile, the \texttt{Cronjob} can autonomously flag communication problems without introducing overhead to the data ingestion pipeline. To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely separated of downstream notification policies. Once a failure state is declared, it hands off a structured exception event to the central \texttt{AlertManager}, which dynamically resolves the stakeholder routing logic.
+Because transmission rates can differ across patients and can be updated dynamically by operators \hyperref[diag:Interaction:Updategatewaypushwaittime]{(cfr. D.8)}, the Cronjob does not use a single global threshold but rather evaluates each patient's liveness against their individual configured interval.
+
+Thus the Cronjob can autonomously flag communication problems without introducing overhead to the data ingestion pipeline.
 
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
+	\item To preserve high modifiability and strictly adhere to the Single Responsibility Principle, the \texttt{Cronjob} remains entirely separated of downstream notification policies. Once a failure state is declared, \texttt{AlertManager} dynamically resolves the stakeholder routing logic.
 	\item Utilizing existing, periodic scheduled payloads as connection validation (implicit heartbeats), optimizing client-side battery life and conserving restricted cellular bandwidth.
-	\item The \hyperref[diag:Interaction:av2CommunicationchannelbetweenPMSandPGgoesdownDetectionbytimeoutBackend]{AlertManager} applies differentiated service levels by routing alerts through the AlertPush interface without queuing or batching, ensuring notification latency is bounded by detection time alone rather than queue depth. High-risk alerts are dispatched first, satisfying the 2/5/10-minute delivery windows by risk class.
+	\item The \hyperref[diag:Interaction:av2CommunicationchannelbetweenPMSandPGgoesdownDetectionbytimeoutBackend]{AlertManager} applies differentiated service levels by routing alerts through the AlertPush interface without queuing or batching, ensuring notification latency is bounded by detection time alone. High-risk alerts are dispatched first, satisfying the 2/5/10-minute delivery windows by risk class.
 \end{itemize}
 
 \subsubsection*{Sensitivity points}
@@ -209,7 +212,6 @@ An alternative approach considered was forcing the backend servers to actively b
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 3: Adding external SMS gateway}
 To ensure critical health events are reported even during complete IP network outages, we integrated an external SMS gateway into the architecture. When the SyncManager detects a degraded network state but identifies a life-threatening anomaly (such as an emergency notification per UC3), it bypasses the standard PatientDataPush interface. Instead, it leverages the SMSinterface to transmit a highly compressed emergency payload over standard cellular GSM networks. This guarantees a secondary, out-of-band communication route for the most critical system alerts, ensuring patient safety is not entirely dependent on internet connectivity.
-
 \subsubsection*{Employed tactics and patterns}
 \begin{itemize}
 	\item \textbf{Active redundancy (Communication):} Deploying a secondary, independent physical communication medium (GSM) to back up the primary medium (IP/Wi-Fi/4G data).
@@ -244,7 +246,7 @@ Integrating a full, native SDK or OAuth redirection flow directly inside the sma
 When communication failures or system anomalies are detected, the system offloads the notifications to a dedicated component: the \nameref{comp:ComponentseHealthPlatformAlertManager}.
 
 \paragraph{Context and Justification:}
-To maintain high modifiability and adhere strictly to the Single Responsibility Principle, network detection components (like the cronjob) should not know how or who to notify when a failure occurs. Instead, once a failure state is declared, a structured exception event is handed off to the \nameref{comp:ComponentseHealthPlatformAlertManager}. This component resolves the alert. Centralizing this logic ensures that notification rules and thresholds can be modified or updated over time without requiring any redeployments or changes to our core endpoints.
+To maintain high modifiability and adhere strictly to the Single Responsibility Principle, network detection components (like the Cronjob) should not know how or who to notify when a failure occurs. Instead, once a failure state is declared, a structured exception event is handed off to the \nameref{comp:ComponentseHealthPlatformAlertManager}. This component resolves the alert. Centralizing this logic ensures that notification rules and thresholds can be modified or updated over time without requiring any redeployments or changes to our core endpoints.
 
 \subsection*{3.. Architectural Infrastructure Decision: Patient and Operator Gateway Endpoints}
 
@@ -260,7 +262,7 @@ Gateway Pattern, Single Responsibility, Role-Based Access Control (RBAC).
 \end{itemize}
 
 \subsubsection*{Relation to other architectural decisions}
-This centralized layout directly supports our availability routing logic for scenario Av2. When communication drops or a patient gateway goes offline, having a single communication gateway allows our auditing components (like the server-side cronjobs and alert managers) to track connection drops in one consolidated ledger rather than having to scan scattered application logs.
+This centralized layout directly supports our availability routing logic for scenario Av2. When communication drops or a patient gateway goes offline, having a single communication gateway allows our auditing components (like the server-side Cronjobs and alert managers) to track connection drops in one consolidated ledger rather than having to scan scattered application logs.
 
 \subsubsection*{Trade-off justification}
 By funneling all external incoming and outgoing traffic through dedicated gateway components, we introduce an extra network hop and a potential system bottleneck. However, this trade-off is completely justified: it drastically reduces code duplication for common network tasks (such as connection retries, timeout strategies, and fallback behaviors) and gives our security team an isolated, easy-to-audit boundary to safeguard incoming data.
