@@ -142,7 +142,7 @@ In order to satisfy availability by handling fault-tolerance in the primary comm
 
 % ------------------------------------------------------------
 \subsection*{Architectural Decision 1:  SyncManager and Buffer}
-To maintain operational continuity and detect communication failure on the app-side, we introduced SyncManager and a buffer module directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
+To maintain operational continuity and detect communication failure on the app-side, we introduced SyncManager and a buffer module, which represent a circular buffer, directly within the internal infrastructure of the Patient Gateway App component. Rather than allowing network exceptions to cascade into the data collection threads of the application, the SyncManager acts as an interceptor for all outbound data transmissions.
 
 Instead of crashing or blocking the data-collection routines, the transaction exception is routed to the SyncManager. The SyncManager immediately transitions the gateway application into a local degraded mode.
 
